@@ -1,2 +1,3 @@
 export {loginUser} from './auth'
-export {post} from './common'
+export {get, post} from './common'
+export {getUserDetails} from './user'

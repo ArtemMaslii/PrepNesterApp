@@ -9,6 +9,7 @@ interface TextFieldWithErrorProps {
   error: boolean;
   helperText: string;
   focused: boolean;
+  isPassword?: boolean;
 }
 
 export const TextFieldWithError: React.FC<TextFieldWithErrorProps> =
@@ -19,9 +20,11 @@ export const TextFieldWithError: React.FC<TextFieldWithErrorProps> =
        onChange,
        error,
        helperText,
-       focused
+       focused,
+       isPassword = false
      }) => (
         <TextField
+            type={isPassword ? 'password' : 'text'}
             margin="normal"
             required
             fullWidth

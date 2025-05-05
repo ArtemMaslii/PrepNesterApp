@@ -41,6 +41,9 @@ export default function LoginModal() {
     try {
       const response = await loginUser({email, password});
       login(response.accessToken);
+
+      localStorage.setItem('email', email);
+
       router.push('/prepnester');
     } catch (error) {
       setFormError('Email or password is not correct');
@@ -104,6 +107,7 @@ export default function LoginModal() {
                     error={!!passwordError}
                     helperText={passwordError}
                     focused={!!password}
+                    isPassword
                 />
                 <Button
                     type="submit"
