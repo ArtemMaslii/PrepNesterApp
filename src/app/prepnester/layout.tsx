@@ -1,13 +1,17 @@
+import { AuthProvider } from '@/context';
+
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+ children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body>
+      <AuthProvider>
         {children}
+      </AuthProvider>
       </body>
-    </html>
+      </html>
   );
 }
