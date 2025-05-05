@@ -6,7 +6,7 @@ import BookIcon from "@mui/icons-material/Book";
 import ArticleIcon from '@mui/icons-material/Article';
 import {usePathname, useRouter} from "next/navigation";
 
-export const SideBar = ({simplified}: { simplified: string }) => {
+export const SideBar = ({simplified}: { simplified: boolean }) => {
   const router = useRouter();
   const pathname = usePathname();
 
