@@ -1,3 +1,6 @@
 export {IconSvg} from './IconSvg'
 export * from './login'
-export {SideBar} from './SideBar'
+export * from './layout'
+export {RouteGuard} from './RouteGuard'
+export {CustomButton} from './CustomButton'
+export {Search} from './Search'

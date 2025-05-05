@@ -18,7 +18,7 @@ export default function LoginModal() {
 
   useEffect(() => {
     if (token) {
-      router.push('/prepnester');
+      router.push('/prepnester/question');
     }
   }, [token, router]);
 
@@ -44,7 +44,7 @@ export default function LoginModal() {
 
       localStorage.setItem('email', email);
 
-      router.push('/prepnester');
+      router.push('/prepnester/question');
     } catch (error) {
       setFormError('Email or password is not correct');
     } finally {
@@ -65,7 +65,6 @@ export default function LoginModal() {
           <Typography component="h1" variant="h3">
             Welcome to PrepNester
           </Typography>
-          {formError && <FormErrorMessage message={formError}/>}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
             <TextFieldWithError
                 id="email"
@@ -92,6 +91,7 @@ export default function LoginModal() {
                 focused={!!password}
                 isPassword
             />
+            {formError && <FormErrorMessage message={formError}/>}
             <Button
                 type="submit"
                 fullWidth
@@ -99,7 +99,7 @@ export default function LoginModal() {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  borderRadius: '8px',
+                  borderRadius: '24px',
                   height: '42px',
                   fontSize: '0.875rem',
                   backgroundColor: '#000048',

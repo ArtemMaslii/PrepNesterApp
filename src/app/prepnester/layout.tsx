@@ -2,7 +2,7 @@
 import {AuthProvider, UserProvider} from '@/context';
 import {Box, CssBaseline, Grid} from "@mui/material";
 import React from "react";
-import {SideBar} from "@/components";
+import {RouteGuard, SideBar, TopBar} from "@/components";
 import {usePathname} from "next/navigation";
 
 export default function RootLayout(
@@ -19,13 +19,57 @@ export default function RootLayout(
       <body>
       <AuthProvider>
         <UserProvider>
-          <Box sx={{flexGrow: 1, height: '100vh', width: '100%'}}>
+          <RouteGuard>
             <CssBaseline/>
-            <Grid container sx={{height: '100%'}}>
-              <SideBar simplified={simplified}/>
-              {children}
-            </Grid>
-          </Box>
+            {simplified ? (
+                <Box sx={{
+                  flexGrow: 1,
+                  height: '100vh',
+                }}>
+                  <Grid container sx={{height: '100%'}}>
+                    <SideBar simplified={simplified}/>
+                    {children}
+                  </Grid>
+                </Box>
+            ) : (
+                <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '70px 1fr',
+                      gridTemplateRows: '90px 1fr',
+                      height: '100vh',
+                      gridTemplateAreas: `
+        "sidebar topbar"
+        "sidebar content"
+      `,
+                    }}
+                >
+                  <Box
+                      sx={{
+                        gridArea: 'sidebar',
+                        zIndex: 2
+                      }}
+                  >
+                    <SideBar simplified={simplified}/>
+                  </Box>
+                  <Box
+                      sx={{
+                        gridArea: 'topbar',
+                        zIndex: 1,
+                      }}
+                  >
+                    <TopBar/>
+                  </Box>
+                  <Box
+                      sx={{
+                        gridArea: 'content',
+                      }}
+                  >
+                    {children}
+                  </Box>
+                </Box>
+            )}
+          </RouteGuard>
         </UserProvider>
       </AuthProvider>
       </body>

@@ -1,5 +1,5 @@
 'use client';
-import {Box, Divider, Grid, IconButton, Typography} from "@mui/material";
+import {Box, Grid, IconButton, Typography} from "@mui/material";
 import {IconSvg} from "@/components/IconSvg";
 import React from "react";
 import BookIcon from "@mui/icons-material/Book";
@@ -16,7 +16,7 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
     }
   };
 
-  const isOnQuestionBank = pathname === '/prepnester';
+  const isOnQuestionBank = pathname === '/prepnester/question';
   const isOnInterviewBank = pathname === '/prepnester/interviews';
 
   return (
@@ -26,7 +26,7 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
             display="flex"
             alignItems="center"
             flexDirection="column"
-            sx={{borderRight: '1px solid #ccc'}}
+            sx={{borderRight: '1px solid #ccc', height: "100%"}}
         >
           <Box
               display="flex"
@@ -43,7 +43,7 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
                 <Box display="flex" justifyContent="center" alignItems="center"
                      flexDirection="column"
                      pt={2}>
-                  <IconButton onClick={() => handleClick("/prepnester")}
+                  <IconButton onClick={() => handleClick("/prepnester/question")}
                               sx={{
                                 backgroundColor: isOnInterviewBank ? "none" : "#f0f0f0",
                                 borderRadius: '50%',
@@ -74,16 +74,6 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
               </>
           )}
         </Grid>
-
-        <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              height: '100%',
-              boxShadow: '4px 0 6px rgba(0,0,0,0.1)',
-              borderRightWidth: '1px'
-            }}
-        />
       </>
   );
 };
