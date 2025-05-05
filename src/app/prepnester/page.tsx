@@ -6,6 +6,6 @@ export default function Home() {
   const {user} = useUser()
 
   return (
-      <>{console.log(user)}</>
+      <>Hi</>
   );
 }
