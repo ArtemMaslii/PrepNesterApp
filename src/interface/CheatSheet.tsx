@@ -8,4 +8,5 @@ export interface CheatSheet {
   likesCount: number;
   createdBy: string;
   updatedBy: string;
+  isLikedByCurrentUser: boolean;
 }

@@ -1,7 +1,8 @@
 import {Box} from "@mui/material";
 import {QuestionContentPreview} from "@/components/questionBank";
-import {ChatBubbleOutlineOutlined, ThumbUpOutlined} from "@mui/icons-material";
-import {FC} from "react";
+import {ChatBubbleOutlineOutlined} from "@mui/icons-material";
+import {FC, useState} from "react";
+import {LikeButton} from "@/components";
 
 type SubQuestionListItemProps = {
   id: string;
@@ -9,6 +10,8 @@ type SubQuestionListItemProps = {
   categoryTitle: string;
   commentsCount: number;
   likesCount: number;
+  isLikedByCurrentUser: boolean;
+  onLikeUpdate?: (newCount: number) => void;
 }
 
 export const SubQuestionListItem: FC<SubQuestionListItemProps> =
@@ -17,8 +20,17 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
        title,
        categoryTitle,
        commentsCount,
-       likesCount
+       likesCount,
+       isLikedByCurrentUser,
+       onLikeUpdate,
      }) => {
+      const [currentLikeAmount, setCurrentLikeAmount] = useState(likesCount);
+
+      const handleLikeUpdate = (newCount: number) => {
+        setCurrentLikeAmount(newCount);
+        onLikeUpdate?.(newCount);
+      };
+
       return (
           <Box
               key={id}
@@ -32,12 +44,15 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
                   title={title}
                   categoryTitle={categoryTitle}
                   commentsCount={commentsCount}
-                  likesCount={likesCount}
+                  likesCount={currentLikeAmount}
               />
             </Box>
-            <Box display='flex' sx={{gap: '18px'}}>
+            <Box display='flex' sx={{gap: '18px'}} alignItems="center">
               <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
-              <ThumbUpOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
+              <LikeButton entityType="questions/sub-questions" entityId={id}
+                          initialLikesCount={currentLikeAmount}
+                          initialIsLiked={isLikedByCurrentUser}
+                          onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
             </Box>
           </Box>
       )

@@ -5,4 +5,5 @@ export interface SubQuestionWithoutComments {
   likesCount: number;
   createdAt: string;
   updatedAt: string;
+  isLikedByCurrentUser: boolean;
 }

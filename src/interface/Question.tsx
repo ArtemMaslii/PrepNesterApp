@@ -11,4 +11,5 @@ export interface Question {
   likesCount: number;
   createdAt: string;
   updatedAt: string;
+  isLikedByCurrentUser: boolean;
 }

@@ -12,7 +12,8 @@ export const SubQuestionList = ({subQuestions, categoryTitle}: Props) => (
       {subQuestions.map((sub) => (
           <SubQuestionListItem key={sub.id} id={sub.id} title={sub.title}
                                categoryTitle={categoryTitle} commentsCount={sub.commentsCount}
-                               likesCount={sub.likesCount}/>
+                               likesCount={sub.likesCount}
+                               isLikedByCurrentUser={sub.isLikedByCurrentUser}/>
       ))}
     </Box>
 );
