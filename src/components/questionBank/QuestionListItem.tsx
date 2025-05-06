@@ -5,7 +5,7 @@ import {
   ExpandMore,
   ThumbUpOutlined
 } from "@mui/icons-material";
-import {QuestionContentPreview} from "@/components";
+import {QuestionContentPreview} from "@/components/questionBank";
 import {Question} from "@/interface/Question";
 import {SubQuestionList} from "./SubQuestionList";
 

@@ -1,5 +1,5 @@
 import {Box} from "@mui/material";
-import {CustomTextField} from "./CustomTextField";
+import {CustomTextField} from "@/components";
 import React, {FC} from "react";
 import {pluralize} from "@/lib/util";
 

@@ -5,3 +5,4 @@ export {QuestionListItem} from './QuestionListItem';
 export {SubQuestionList} from './SubQuestionList';
 export {SubQuestionListItem} from './SubQuestionListItem';
 export {SkeletonLoader} from './SkeletonLoader';
+export {QuestionContentPreview} from './QuestionContentPreview';

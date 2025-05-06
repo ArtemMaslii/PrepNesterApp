@@ -1,5 +1,5 @@
 import {Box} from "@mui/material";
-import {QuestionContentPreview} from "@/components";
+import {QuestionContentPreview} from "@/components/questionBank";
 import {ChatBubbleOutlineOutlined, ThumbUpOutlined} from "@mui/icons-material";
 import {FC} from "react";
 
