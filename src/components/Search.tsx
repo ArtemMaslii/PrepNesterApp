@@ -1,8 +1,22 @@
+'use client';
 import SearchIcon from "@mui/icons-material/Search";
 import {Box, InputBase} from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 
-export const Search = () => {
+interface SearchProps {
+  onSearch: (searchTerm: string) => void;
+  onClear: () => void;
+}
+
+export const Search = ({onSearch, onClear}: SearchProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onSearch(searchTerm);
+    }
+  };
+
   return (
       <Box
           sx={{
@@ -19,6 +33,9 @@ export const Search = () => {
         <SearchIcon sx={{color: "gray", mr: 1}}/>
         <InputBase
             placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
             sx={{
               flex: 1,
               fontSize: "0.9rem",

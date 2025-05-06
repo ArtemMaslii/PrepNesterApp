@@ -8,7 +8,7 @@ import {fetchAllCheatSheets} from "@/lib/api";
 interface CheatSheetsProvider {
   cheatSheets: CheatSheet[];
   cheatSheetsLoading: boolean;
-  reloadCheatSheets: () => Promise<void>;
+  reloadCheatSheets: (searchTerm?: string) => Promise<void>;
 }
 
 const CheatSheetsContext = createContext<CheatSheetsProvider | undefined>(undefined);
@@ -18,11 +18,11 @@ export const CheatSheetsProvider: React.FC<{ children: React.ReactNode }> = ({ch
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
 
-  const loadCheatSheets = async () => {
+  const loadCheatSheets = async (searchTerm?: string) => {
     setLoading(true);
     try {
       if (token) {
-        const data = await fetchAllCheatSheets(token);
+        const data = await fetchAllCheatSheets(token, searchTerm);
         setCheatSheets(data);
       }
     } catch (error) {

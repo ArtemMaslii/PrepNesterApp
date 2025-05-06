@@ -8,7 +8,7 @@ import {useAuth} from "@/context";
 interface QuestionContext {
   questions: Question[];
   questionsLoading: boolean;
-  reloadQuestions: () => Promise<void>;
+  reloadQuestions: (searchTerm?: string) => Promise<void>;
 }
 
 const QuestionContext = createContext<QuestionContext | undefined>(undefined);
@@ -18,11 +18,11 @@ export const QuestionProvider: React.FC<{ children: React.ReactNode }> = ({child
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
 
-  const loadQuestions = async () => {
+  const loadQuestions = async (searchTerm?: string) => {
     setLoading(true);
     try {
       if (token) {
-        const data = await fetchAllQuestions(token);
+        const data = await fetchAllQuestions(token, searchTerm);
         setQuestions(data);
       }
     } catch (error) {
