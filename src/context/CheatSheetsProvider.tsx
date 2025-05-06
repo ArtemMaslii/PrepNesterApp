@@ -7,7 +7,7 @@ import {fetchAllCheatSheets} from "@/lib/api";
 
 interface CheatSheetsProvider {
   cheatSheets: CheatSheet[];
-  loading: boolean;
+  cheatSheetsLoading: boolean;
   reloadCheatSheets: () => Promise<void>;
 }
 
@@ -38,7 +38,7 @@ export const CheatSheetsProvider: React.FC<{ children: React.ReactNode }> = ({ch
 
   return (
       <CheatSheetsContext.Provider
-          value={{cheatSheets, loading, reloadCheatSheets: loadCheatSheets}}>
+          value={{cheatSheets, cheatSheetsLoading: loading, reloadCheatSheets: loadCheatSheets}}>
         {children}
       </CheatSheetsContext.Provider>
   );

@@ -2,23 +2,25 @@
 
 import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
-import {useQuestions} from "@/context";
+import {useCheatSheets, useQuestions} from "@/context";
 import {
   QuestionBankHeader,
   QuestionBankSearch,
   QuestionList,
   SkeletonLoader
 } from "@/components/questionBank";
+import {CheatSheetList} from "@/components/questionBank/cheatSheets/CheatSheetList";
 
 export default function QuestionBank() {
-  const {questions, loading} = useQuestions();
+  const {questions, questionsLoading} = useQuestions();
+  const {cheatSheets, cheatSheetsLoading} = useCheatSheets()
   const [expandedQuestionIds, setExpandedQuestionIds] = useState<string[]>([]);
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (loading) {
+    if (questionsLoading || cheatSheetsLoading) {
       timer = setTimeout(() => {
         setShowLoading(true);
       }, 300); // delay in ms
@@ -27,7 +29,7 @@ export default function QuestionBank() {
     }
 
     return () => clearTimeout(timer);
-  }, [loading]);
+  }, [questionsLoading, cheatSheetsLoading]);
 
   if (showLoading) return (
       <Box paddingX="40px" paddingY="20px">
@@ -47,6 +49,7 @@ export default function QuestionBank() {
       <Box paddingX="40px" paddingY="20px">
         <QuestionBankHeader/>
         <QuestionBankSearch/>
+        <CheatSheetList cheatSheets={cheatSheets}/>
         <QuestionList
             questions={questions}
             expandedQuestionIds={expandedQuestionIds}

@@ -10,12 +10,14 @@ interface Props {
 export const QuestionList = ({questions, expandedQuestionIds, toggleQuestionDrawer}: Props) => (
     <>
       {questions.map((question) => (
-          <QuestionListItem
-              key={question.id}
-              question={question}
-              isExpanded={expandedQuestionIds.includes(question.id)}
-              toggleExpand={() => toggleQuestionDrawer(question.id)}
-          />
+          question.isPublic ? (
+              <QuestionListItem
+                  key={question.id}
+                  question={question}
+                  isExpanded={expandedQuestionIds.includes(question.id)}
+                  toggleExpand={() => toggleQuestionDrawer(question.id)}
+              />
+          ) : null
       ))}
     </>
 );

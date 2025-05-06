@@ -7,7 +7,7 @@ import {useAuth} from "@/context";
 
 interface QuestionContext {
   questions: Question[];
-  loading: boolean;
+  questionsLoading: boolean;
   reloadQuestions: () => Promise<void>;
 }
 
@@ -37,7 +37,8 @@ export const QuestionProvider: React.FC<{ children: React.ReactNode }> = ({child
   }, [token]);
 
   return (
-      <QuestionContext.Provider value={{questions, loading, reloadQuestions: loadQuestions}}>
+      <QuestionContext.Provider
+          value={{questions, questionsLoading: loading, reloadQuestions: loadQuestions}}>
         {children}
       </QuestionContext.Provider>
   );
