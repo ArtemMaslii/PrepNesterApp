@@ -22,7 +22,7 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
   return (
       <>
         <Grid
-            size={{xs: 12, sm: 0.8}}
+            size={{xs: 12, sm: 1}}
             display="flex"
             alignItems="center"
             flexDirection="column"

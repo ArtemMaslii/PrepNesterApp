@@ -13,7 +13,7 @@ export const Search = () => {
             px: 2,
             py: 0.5,
             width: "100%",
-            maxWidth: "1300px",
+            maxWidth: "1100px",
           }}
       >
         <SearchIcon sx={{color: "gray", mr: 1}}/>

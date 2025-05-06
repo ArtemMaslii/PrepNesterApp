@@ -2,7 +2,7 @@
 
 import {Box, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {CustomButton, Search} from "@/components";
+import {CustomButton, QuestionCard, Search} from "@/components";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,8 +36,9 @@ export default function QuestionBank() {
       <Box paddingX="40px" paddingY="20px">
         <Box display="flex" justifyContent="space-between" alignContent="center">
           <Box>
-            <Typography variant="h4">Question Bank</Typography>
-            <Typography>Discover, create and improve existing interview questions and
+            <Typography sx={{fontSize: '30px'}}>Question Bank</Typography>
+            <Typography sx={{fontSize: '18px'}}>Discover, create and improve existing interview
+              questions and
               build interview
               templates.</Typography>
           </Box>
@@ -73,15 +74,7 @@ export default function QuestionBank() {
           </CustomButton>
         </Box>
         {questions.map((question => (
-            <Box key={question.id} sx={{
-              padding: '20px',
-              marginTop: '20px',
-              border: '1px solid #DDDDDD',
-              borderRadius: '8px',
-            }}>
-              <Typography variant="h6">{question.title}</Typography>
-              <Typography>{question.id}</Typography>
-            </Box>
+            <QuestionCard question={question} key={question.id}/>
         )))}
       </Box>
   );

@@ -1,6 +1,6 @@
 export {IconSvg} from './IconSvg'
 export * from './login'
 export * from './layout'
+export * from './questionBank'
 export {RouteGuard} from './RouteGuard'
 export {CustomButton} from './CustomButton'
-export {Search} from './Search'

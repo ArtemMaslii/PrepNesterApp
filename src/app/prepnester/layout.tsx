@@ -35,7 +35,7 @@ export default function RootLayout(
                 <Box
                     sx={{
                       display: 'grid',
-                      gridTemplateColumns: '70px 1fr',
+                      gridTemplateColumns: '80px 1fr',
                       gridTemplateRows: '90px 1fr',
                       height: '100vh',
                       gridTemplateAreas: `
