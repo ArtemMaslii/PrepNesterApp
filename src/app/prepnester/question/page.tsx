@@ -2,7 +2,7 @@
 
 import React, {useCallback, useEffect, useState} from "react";
 import {Box} from "@mui/material";
-import {useCheatSheets, useQuestions} from "@/context";
+import {useCategories, useCheatSheets, useQuestions} from "@/context";
 import {
   QuestionBankHeader,
   QuestionBankSearch,
@@ -12,12 +12,19 @@ import {
 } from "@/components/questionBank";
 import {CheatSheetList} from "@/components/questionBank/cheatSheets/CheatSheetList";
 import {SortBy} from "@/interface/SortBy";
+import {RequestQuestion} from "@/interface/requestCreateQuestion";
+import {CreateQuestionModal} from "@/components/questionBank/questionCreateModal";
 
 export default function QuestionBank() {
-  const {questions, questionsLoading, reloadQuestions} = useQuestions();
+  // Context Hooks
+  const {questions, questionsLoading, reloadQuestions, createNewQuestion} = useQuestions();
   const {cheatSheets, cheatSheetsLoading, reloadCheatSheets} = useCheatSheets();
+  const {categories} = useCategories();
+
+  // State Management
   const [expandedQuestionIds, setExpandedQuestionIds] = useState<string[]>([]);
   const [showLoading, setShowLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     searchTerm: "",
     isPublic: true,
@@ -26,6 +33,8 @@ export default function QuestionBank() {
   });
   const [prevFilters, setPrevFilters] = useState(filters);
 
+
+  // Data Loading
   const loadData = useCallback(async () => {
     try {
       if (JSON.stringify(filters) === JSON.stringify(prevFilters)) {
@@ -54,6 +63,17 @@ export default function QuestionBank() {
     }
   }, [filters, prevFilters, reloadQuestions, reloadCheatSheets]);
 
+  const handleCreateQuestion = async (questionData: Omit<RequestQuestion, 'createdBy'>) => {
+    try {
+      await createNewQuestion(questionData);
+      setModalOpen(false);
+    } catch (error) {
+      // Handle error (show toast, etc.)
+      console.error("Question creation failed:", error);
+    }
+  };
+
+  // Effects
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -72,6 +92,8 @@ export default function QuestionBank() {
     return () => clearTimeout(timer);
   }, [questionsLoading, cheatSheetsLoading]);
 
+
+  // Event handlers
   const handleSearch = useCallback((term: string) => {
     setFilters(prev => ({...prev, searchTerm: term}));
   }, []);
@@ -96,7 +118,7 @@ export default function QuestionBank() {
 
   if (showLoading) return (
       <Box paddingX="40px" paddingY="20px">
-        <QuestionBankHeader/>
+        <QuestionBankHeader onAddQuestionClick={() => setModalOpen(true)}/>
         <QuestionBankSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
@@ -109,7 +131,7 @@ export default function QuestionBank() {
 
   return (
       <Box paddingX="40px" paddingY="20px">
-        <QuestionBankHeader/>
+        <QuestionBankHeader onAddQuestionClick={() => setModalOpen(true)}/>
         <QuestionBankSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
@@ -118,6 +140,13 @@ export default function QuestionBank() {
         <QuestionBankSorting
             onFilterChange={handleFilterChange}
             currentFilters={filters}
+        />
+
+        <CreateQuestionModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            onSubmit={handleCreateQuestion}
+            categories={categories}
         />
 
         {(filters.contentType === 'all' || filters.contentType === 'cheatSheets') && (

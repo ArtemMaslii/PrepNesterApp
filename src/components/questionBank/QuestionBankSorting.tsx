@@ -104,9 +104,9 @@ export const QuestionBankSorting = (
                   ...selectedStyleColor,
                 }}
             >
-              <MenuItem value='all'>All</MenuItem>
-              <MenuItem value='questions'>Questions</MenuItem>
-              <MenuItem value='cheatSheets'>Cheat Sheets</MenuItem>
+              <MenuItem value='all' sx={{color: '#000048'}}>All</MenuItem>
+              <MenuItem value='questions' sx={{color: '#000048'}}>Questions</MenuItem>
+              <MenuItem value='cheatSheets' sx={{color: '#000048'}}>Cheat Sheets</MenuItem>
             </Select>
           </FormControl>
           <FormControl>
@@ -122,8 +122,8 @@ export const QuestionBankSorting = (
                   width: '120px', ...selectedStyleColor
                 }}
             >
-              <MenuItem value='public'>Public</MenuItem>
-              <MenuItem value='private'>Private</MenuItem>
+              <MenuItem value='public' sx={{color: '#000048'}}>Public</MenuItem>
+              <MenuItem value='private' sx={{color: '#000048'}}>Private</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -142,12 +142,15 @@ export const QuestionBankSorting = (
                   width: '200px', ...selectedStyleColor
                 }}
             >
-              <MenuItem value={SortBy.RECENTLY_CREATED}>Recently Created</MenuItem>
-              <MenuItem value={SortBy.RECENTLY_UPDATED}>Recently Updated</MenuItem>
-              <MenuItem value={SortBy.MOST_LIKED}>Most Liked</MenuItem>
-              <MenuItem value={SortBy.MOST_COMMENTED}>Most Commented</MenuItem>
-              <MenuItem value={SortBy.ASCENDING}>A-Z</MenuItem>
-              <MenuItem value={SortBy.DESCENDING}>Z-A</MenuItem>
+              <MenuItem value={SortBy.RECENTLY_CREATED} sx={{color: '#000048'}}>Recently
+                Created</MenuItem>
+              <MenuItem value={SortBy.RECENTLY_UPDATED} sx={{color: '#000048'}}>Recently
+                Updated</MenuItem>
+              <MenuItem value={SortBy.MOST_LIKED} sx={{color: '#000048'}}>Most Liked</MenuItem>
+              <MenuItem value={SortBy.MOST_COMMENTED} sx={{color: '#000048'}}>Most
+                Commented</MenuItem>
+              <MenuItem value={SortBy.ASCENDING} sx={{color: '#000048'}}>A-Z</MenuItem>
+              <MenuItem value={SortBy.DESCENDING} sx={{color: '#000048'}}>Z-A</MenuItem>
             </Select>
           </FormControl>
         </Box>

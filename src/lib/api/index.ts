@@ -1,5 +1,6 @@
 export {loginUser} from './auth'
 export {get, post} from './common'
 export {getUserDetails} from './user'
-export {fetchAllQuestions} from './question'
+export {fetchAllQuestions, createQuestion} from './question'
 export {fetchAllCheatSheets} from './cheatSheet'
+export {fetchAllCategories} from './categories'

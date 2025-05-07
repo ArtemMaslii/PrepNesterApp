@@ -1,6 +1,7 @@
-import {get} from "@/lib/api/common";
+import {get, post} from "@/lib/api/common";
 import {Question} from "@/interface/Question";
 import {SortBy} from "@/interface/SortBy";
+import {RequestQuestion} from "@/interface/requestCreateQuestion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL_AUTH || 'http://localhost:8080/api/v1';
 
@@ -24,3 +25,10 @@ export const fetchAllQuestions = (
 
   return get<Question[]>(url.toString(), token);
 };
+
+export const createQuestion = (
+    token: string,
+    question: RequestQuestion
+): Promise<Question> => {
+  return post<Question>(`${API_URL}/questions`, question, token);
+}
