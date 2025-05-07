@@ -4,11 +4,12 @@ import React, {createContext, useContext, useEffect, useState} from "react";
 import {Question} from "@/interface/Question";
 import {fetchAllQuestions} from "@/lib/api";
 import {useAuth} from "@/context";
+import {SortBy} from "@/interface/SortBy";
 
 interface QuestionContext {
   questions: Question[];
   questionsLoading: boolean;
-  reloadQuestions: (searchTerm?: string) => Promise<void>;
+  reloadQuestions: (isPublic?: boolean, sortBy?: SortBy, searchTerm?: string, pageNum?: number, pageSize?: number) => Promise<void>;
 }
 
 const QuestionContext = createContext<QuestionContext | undefined>(undefined);
@@ -18,11 +19,17 @@ export const QuestionProvider: React.FC<{ children: React.ReactNode }> = ({child
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
 
-  const loadQuestions = async (searchTerm?: string) => {
+  const loadQuestions = async (
+      isPublic: boolean = true,
+      sortBy: SortBy = SortBy.ASCENDING,
+      searchTerm?: string,
+      pageNum: number = 0,
+      pageSize: number = 25
+  ) => {
     setLoading(true);
     try {
       if (token) {
-        const data = await fetchAllQuestions(token, searchTerm);
+        const data = await fetchAllQuestions(token, isPublic, sortBy, searchTerm, pageNum, pageSize);
         setQuestions(data);
       }
     } catch (error) {

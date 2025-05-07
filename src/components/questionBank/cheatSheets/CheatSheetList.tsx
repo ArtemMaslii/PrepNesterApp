@@ -8,12 +8,10 @@ interface Props {
 export const CheatSheetList = ({cheatSheets}: Props) => (
     <>
       {cheatSheets.map((cheatSheet) => (
-          cheatSheet.isPublic ? (
-              <CheatSheetListItem
-                  key={cheatSheet.id}
-                  cheatSheet={cheatSheet}
-              />
-          ) : null
+          <CheatSheetListItem
+              key={cheatSheet.id}
+              cheatSheet={cheatSheet}
+          />
       ))}
     </>
 );

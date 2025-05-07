@@ -1,32 +1,36 @@
 'use client';
+
 import {Box, Typography} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import {CustomButton, Search} from "@/components";
-import {useCheatSheets, useQuestions} from "@/context";
 import {useState} from "react";
 
-export const QuestionBankSearch = () => {
-  const {reloadCheatSheets} = useCheatSheets();
-  const {reloadQuestions} = useQuestions();
-  const [searchTerm, setSearchTerm] = useState("");
+interface QuestionBankSearchProps {
+  onSearch: (term: string) => void;
+  onClear: () => void;
+  searchTerm: string;
+}
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    reloadCheatSheets(term);
-    reloadQuestions(term);
+export const QuestionBankSearch = ({onSearch, onClear, searchTerm}: QuestionBankSearchProps) => {
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+
+  const handleLocalSearch = (term: string) => {
+    setLocalSearchTerm(term);
   };
 
-  const handleClear = () => {
-    setSearchTerm("");
-    reloadCheatSheets();
-    reloadQuestions();
+  const handleSearchSubmit = () => {
+    onSearch(localSearchTerm);
+  };
+
+  const handleClearLocal = () => {
+    setLocalSearchTerm("");
+    onClear();
   };
 
   return (
       <Box sx={{
         display: 'flex',
-        justifyContent: 'center',
         gap: '8px',
         alignItems: 'center',
         width: '100%',
@@ -34,19 +38,20 @@ export const QuestionBankSearch = () => {
         marginTop: '40px',
       }}>
         <Search
-            onSearch={handleSearch}
-            onClear={handleClear}
+            value={localSearchTerm}
+            onChange={handleLocalSearch}
+            onSearch={handleSearchSubmit}
         />
         <CustomButton
             variant='secondary'
-            onClick={handleClear}
+            onClick={handleClearLocal}
         >
           <CloseIcon sx={{color: "#000048", paddingLeft: '8px'}}/>
           <Typography padding="8px">Clear</Typography>
         </CustomButton>
         <CustomButton
             variant='primary'
-            onClick={() => handleSearch(searchTerm)}
+            onClick={handleSearchSubmit}
         >
           <SearchIcon sx={{color: "white", paddingLeft: '8px'}}/>
           <Typography padding="8px">Search</Typography>
