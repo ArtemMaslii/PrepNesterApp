@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 interface QuestionBankHeaderProps {
   onAddQuestionClick: () => void;
-  onAddInterviewSheetClick?: () => void;
+  onAddInterviewSheetClick: () => void;
 }
 
 export const QuestionBankHeader = (

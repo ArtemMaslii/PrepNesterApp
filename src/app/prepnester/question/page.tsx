@@ -14,6 +14,9 @@ import {CheatSheetList} from "@/components/questionBank/cheatSheets/CheatSheetLi
 import {SortBy} from "@/interface/SortBy";
 import {RequestQuestion} from "@/interface/requestCreateQuestion";
 import {CreateQuestionModal} from "@/components/questionBank/questionCreateModal";
+import {
+  CheatSheetCreateModal
+} from "@/components/questionBank/cheatSheetCreateModal/CreateCheatSheetModal";
 
 export default function QuestionBank() {
   // Context Hooks
@@ -24,7 +27,8 @@ export default function QuestionBank() {
   // State Management
   const [expandedQuestionIds, setExpandedQuestionIds] = useState<string[]>([]);
   const [showLoading, setShowLoading] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [questionModalOpen, setQuestionModalOpen] = useState(false);
+  const [cheatSheetModalOpen, setCheatSheetModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     searchTerm: "",
     isPublic: true,
@@ -66,7 +70,7 @@ export default function QuestionBank() {
   const handleCreateQuestion = async (questionData: Omit<RequestQuestion, 'createdBy'>) => {
     try {
       await createNewQuestion(questionData);
-      setModalOpen(false);
+      setQuestionModalOpen(false);
     } catch (error) {
       // Handle error (show toast, etc.)
       console.error("Question creation failed:", error);
@@ -118,7 +122,8 @@ export default function QuestionBank() {
 
   if (showLoading) return (
       <Box paddingX="40px" paddingY="20px">
-        <QuestionBankHeader onAddQuestionClick={() => setModalOpen(true)}/>
+        <QuestionBankHeader onAddQuestionClick={() => setQuestionModalOpen(true)}
+                            onAddInterviewSheetClick={() => setCheatSheetModalOpen(true)}/>
         <QuestionBankSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
@@ -131,7 +136,8 @@ export default function QuestionBank() {
 
   return (
       <Box paddingX="40px" paddingY="20px">
-        <QuestionBankHeader onAddQuestionClick={() => setModalOpen(true)}/>
+        <QuestionBankHeader onAddQuestionClick={() => setQuestionModalOpen(true)}
+                            onAddInterviewSheetClick={() => setCheatSheetModalOpen(true)}/>
         <QuestionBankSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
@@ -143,10 +149,15 @@ export default function QuestionBank() {
         />
 
         <CreateQuestionModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
+            open={questionModalOpen}
+            onClose={() => setQuestionModalOpen(false)}
             onSubmit={handleCreateQuestion}
             categories={categories}
+        />
+
+        <CheatSheetCreateModal
+            open={cheatSheetModalOpen}
+            onClose={() => setCheatSheetModalOpen(false)}
         />
 
         {(filters.contentType === 'all' || filters.contentType === 'cheatSheets') && (

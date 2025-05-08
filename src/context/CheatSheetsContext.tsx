@@ -2,14 +2,16 @@
 
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {CheatSheet} from "@/interface/CheatSheet";
-import {useAuth} from "@/context";
-import {fetchAllCheatSheets} from "@/lib/api";
+import {useAuth, useUser} from "@/context";
+import {createCheatSheet, fetchAllCheatSheets} from "@/lib/api";
 import {SortBy} from "@/interface/SortBy";
+import {RequestCheatSheet} from "@/interface/requestCreateCheatSheet";
 
 interface CheatSheetsContext {
   cheatSheets: CheatSheet[];
   cheatSheetsLoading: boolean;
   reloadCheatSheets: (isPublic?: boolean, sortBy?: SortBy, searchTerm?: string, pageNum?: number, pageSize?: number) => Promise<void>;
+  createNewCheatSheet: (cheatSheetData: Omit<RequestCheatSheet, 'createdBy'>) => Promise<void>;
 }
 
 const CheatSheetsContext = createContext<CheatSheetsContext | undefined>(undefined);
@@ -18,6 +20,7 @@ export const CheatSheetsProvider: React.FC<{ children: React.ReactNode }> = ({ch
   const [cheatSheets, setCheatSheets] = useState<CheatSheet[]>([]);
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
+  const {user} = useUser();
 
   const loadCheatSheets = async (
       isPublic: boolean = true,
@@ -39,13 +42,39 @@ export const CheatSheetsProvider: React.FC<{ children: React.ReactNode }> = ({ch
     }
   };
 
+  const createNewCheatSheet = async (cheatSheetData: Omit<RequestCheatSheet, 'createdBy'>) => {
+    try {
+      if (!token || !user?.id) {
+        throw new Error("Authentication required");
+      }
+
+      const requestData: RequestCheatSheet = {
+        ...cheatSheetData,
+        createdBy: user.id
+      };
+
+      const newCheatSheet = await createCheatSheet(token, requestData);
+      setCheatSheets(prev => [newCheatSheet, ...prev]);
+
+      await loadCheatSheets();
+    } catch (error) {
+      console.error("Failed to create cheat sheet:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     loadCheatSheets();
   }, [token]);
 
   return (
       <CheatSheetsContext.Provider
-          value={{cheatSheets, cheatSheetsLoading: loading, reloadCheatSheets: loadCheatSheets}}>
+          value={{
+            cheatSheets,
+            cheatSheetsLoading: loading,
+            reloadCheatSheets: loadCheatSheets,
+            createNewCheatSheet
+          }}>
         {children}
       </CheatSheetsContext.Provider>
   );
