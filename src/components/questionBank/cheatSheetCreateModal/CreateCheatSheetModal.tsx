@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import {useCategories, useQuestions} from '@/context';
 import {CheatSheetQuestionBankPanel} from './CheatSheetQuestionBankPanel';
-import {CheatSheetCategoryQuestionsPanel} from './CheatSheetCategoryQuestionsPanel';
 import {CheatSheetCategory} from '@/interface/requestCreateCheatSheet/CheatSheetCategory';
 import {Question} from '@/interface/Question';
 import {
@@ -35,6 +34,15 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [addedQuestionIds, setAddedQuestionIds] = useState<Set<string>>(new Set());
 
+  const handeClose = () => {
+    onClose()
+    setCategories([]);
+    setSelectedCategoryId(null);
+    setSearchTerm('');
+    setCheatSheetTitle('');
+    setAddedQuestionIds(new Set());
+  }
+
   const filteredQuestions = questions.filter(question =>
       question.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !addedQuestionIds.has(question.id)
@@ -54,7 +62,7 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
       questions: []
     } as CheatSheetCategory
     ])
-    setSelectedCategoryId(newCategoryId);
+    setSelectedCategoryId(newCategoryId || null);
   };
 
   const handleCategoryNameChange = (categoryId: string, newName: string) => {
@@ -134,13 +142,13 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
       title: cheatSheetTitle,
       categories,
     });
-    onClose();
+    handeClose();
   };
 
   const selectedCategory = categories.find(cat => cat.id === selectedCategoryId);
 
   return (
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+      <Dialog open={open} onClose={handeClose} fullWidth maxWidth="lg">
         <DialogTitle>Create Interview Sheet</DialogTitle>
         <DialogContent dividers>
           <DndProvider backend={HTML5Backend}>
@@ -171,21 +179,15 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
                       onCategoryAdd={handleAddCategory}
                       onCategoryRemove={handleRemoveCategory}
                       existingCategories={existingCategories}
+                      onQuestionRemove={handleRemoveQuestion}
                   />
-
-                  {selectedCategory && (
-                      <CheatSheetCategoryQuestionsPanel
-                          category={selectedCategory}
-                          onQuestionRemove={(questionId) => handleRemoveQuestion(selectedCategory.id, questionId)}
-                      />
-                  )}
                 </Box>
               </Box>
             </Box>
           </DndProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handeClose}>Cancel</Button>
           <Button variant="contained" onClick={handleCreateCheatSheet}>Create</Button>
         </DialogActions>
       </Dialog>
