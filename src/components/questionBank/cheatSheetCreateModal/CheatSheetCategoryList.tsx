@@ -30,7 +30,7 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
        onQuestionRemove
      }) => {
       const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-      const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+      const [expandedCategoryId, setExpandedCategoryId] = useState<string | null>(null);
       const open = Boolean(anchorEl);
 
       const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,20 +42,18 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
       };
 
       const handleAddCategory = (name: string) => {
+        const newCategory = existingCategories.find(ec => ec.title === name);
+        if (!newCategory) return;
+
         onCategoryAdd(name);
         handleClose();
+        setExpandedCategoryId(newCategory.id);
       };
 
       const toggleCategoryExpand = (categoryId: string) => {
-        setExpandedCategories(prev => {
-          const newSet = new Set(prev);
-          if (newSet.has(categoryId)) {
-            newSet.delete(categoryId);
-          } else {
-            newSet.add(categoryId);
-          }
-          return newSet;
-        });
+        setExpandedCategoryId(prevId =>
+            prevId === categoryId ? null : categoryId
+        );
       };
 
       const availableCategories = existingCategories.filter(ec =>
@@ -92,7 +90,13 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
                     }}
                 >
                   <Box
-                      onClick={() => onCategorySelect(category.id)}
+                      onClick={() => {
+                        onCategorySelect(category.id);
+
+                        if (expandedCategoryId !== category.id) {
+                          setExpandedCategoryId(category.id);
+                        }
+                      }}
                       sx={{
                         p: 2,
                         cursor: 'pointer',
@@ -114,7 +118,7 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
                             toggleCategoryExpand(category.id);
                           }}
                       >
-                        {expandedCategories.has(category.id) ? (
+                        {expandedCategoryId === category.id ? (
                             <ExpandLessIcon fontSize="small"/>
                         ) : (
                             <ExpandMoreIcon fontSize="small"/>
@@ -125,6 +129,9 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
                           onClick={(e) => {
                             e.stopPropagation();
                             onCategoryRemove(category.id);
+                            if (expandedCategoryId === category.id) {
+                              setExpandedCategoryId(null);
+                            }
                           }}
                       >
                         <CloseIcon fontSize="small"/>
@@ -132,7 +139,7 @@ export const CheatSheetCategoryList: React.FC<CategoryListProps> =
                     </Box>
                   </Box>
 
-                  <Collapse in={expandedCategories.has(category.id)}>
+                  <Collapse in={expandedCategoryId === category.id}>
                     <Box sx={{p: 2, bgcolor: 'background.default'}}>
                       {category.questions.length > 0 ? (
                           category.questions.map((question) => (

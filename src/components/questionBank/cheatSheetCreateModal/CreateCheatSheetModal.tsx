@@ -5,20 +5,25 @@ import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {
   Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
+  Typography,
 } from '@mui/material';
-import {useCategories, useQuestions} from '@/context';
+import {useCategories, useCheatSheets, useQuestions} from '@/context';
 import {CheatSheetQuestionBankPanel} from './CheatSheetQuestionBankPanel';
 import {CheatSheetCategory} from '@/interface/requestCreateCheatSheet/CheatSheetCategory';
 import {Question} from '@/interface/Question';
 import {
   CheatSheetCategoryList
 } from "@/components/questionBank/cheatSheetCreateModal/CheatSheetCategoryList";
+import {RequestCheatSheetCategory} from "@/interface/requestCreateCheatSheet";
+import {CustomButton} from "@/components";
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import {PrivacyTextField} from "@/components/questionBank";
 
 interface CheatSheetCreateModalProps {
   open: boolean;
@@ -28,11 +33,14 @@ interface CheatSheetCreateModalProps {
 export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({open, onClose}) => {
   const {questions} = useQuestions();
   const {categories: existingCategories} = useCategories();
+  const {createNewCheatSheet} = useCheatSheets();
   const [searchTerm, setSearchTerm] = useState('');
   const [cheatSheetTitle, setCheatSheetTitle] = useState('');
   const [categories, setCategories] = useState<CheatSheetCategory[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [addedQuestionIds, setAddedQuestionIds] = useState<Set<string>>(new Set());
+  const [isCreating, setIsCreating] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
   const handeClose = () => {
     onClose()
@@ -65,38 +73,8 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
     setSelectedCategoryId(newCategoryId || null);
   };
 
-  const handleCategoryNameChange = (categoryId: string, newName: string) => {
-    setCategories(categories.map(cat =>
-        cat.id === categoryId ? {...cat, name: newName} : cat
-    ));
-  };
-
   const handleCategorySelect = (categoryId: string | null) => {
     setSelectedCategoryId(prev => prev === categoryId ? null : categoryId);
-  };
-
-  const handleQuestionDrop = (question: Question, fromCategoryId: string) => {
-    const updatedCategories = categories.map(cat => {
-      if (cat.id === fromCategoryId) {
-        return {
-          ...cat,
-          questions: cat.questions.filter(q => q.id !== question.id),
-        };
-      }
-      return cat;
-    });
-
-    if (selectedCategoryId) {
-      const categoryIndex = updatedCategories.findIndex(cat => cat.id === selectedCategoryId);
-      if (categoryIndex !== -1) {
-        const category = updatedCategories[categoryIndex];
-        if (!category.questions.some(q => q.id === question.id)) {
-          category.questions.push(question);
-        }
-      }
-    }
-
-    setCategories(updatedCategories);
   };
 
   const handleAddQuestionToCategory = (question: Question) => {
@@ -137,15 +115,31 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
     setSelectedCategoryId(null);
   };
 
-  const handleCreateCheatSheet = () => {
-    console.log('Creating cheat sheet:', {
-      title: cheatSheetTitle,
-      categories,
-    });
-    handeClose();
-  };
+  const handleCreateCheatSheet = async () => {
+    if (!cheatSheetTitle.trim()) {
+      alert('Please enter a title for your cheat sheet');
+      return;
+    }
 
-  const selectedCategory = categories.find(cat => cat.id === selectedCategoryId);
+    setIsCreating(true);
+    try {
+      await createNewCheatSheet({
+        title: cheatSheetTitle,
+        isPublic: true,
+        categories: categories.map(category => ({
+          id: category.id,
+          questions: category.questions.map(q => ({
+            id: q.id,
+          })),
+        })) as RequestCheatSheetCategory[]
+      });
+      handeClose();
+    } catch (error) {
+      alert('Failed to create cheat sheet. Please try again.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   return (
       <Dialog open={open} onClose={handeClose} fullWidth maxWidth="lg">
@@ -154,14 +148,20 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
           <DndProvider backend={HTML5Backend}>
             <Box display="flex" flexDirection="column" gap={2}>
               <TextField
-                  fullWidth
-                  label="Cheat Sheet Title"
+                  label={<Box display='flex' gap='5px'>Cheat Sheet Title
+                    <span
+                        style={{color: '#FA3131'}}>*
+                    </span>
+                  </Box>}
                   value={cheatSheetTitle}
                   onChange={(e) => setCheatSheetTitle(e.target.value)}
                   margin="normal"
+                  placeholder="Title of a Cheat Sheet"
               />
+              <PrivacyTextField isPublic={isPublic} setIsPublic={setIsPublic}/>
 
-              <Box display="flex" gap={2} height="600px">
+              <Box display="flex" gap={2} height="600px" border="1px solid #ddd"
+                   borderRadius="5px">
                 <CheatSheetQuestionBankPanel
                     questions={filteredQuestions}
                     searchTerm={searchTerm}
@@ -170,8 +170,7 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
                     onQuestionClick={handleAddQuestionToCategory}
                 />
 
-                <Box flex={1} display="flex" flexDirection="column" border="1px solid #ddd"
-                     borderRadius={1} p={2}>
+                <Box flex={1} display="flex" flexDirection="column" borderRadius={1} p={2}>
                   <CheatSheetCategoryList
                       categories={categories}
                       selectedCategoryId={selectedCategoryId}
@@ -186,9 +185,23 @@ export const CheatSheetCreateModal: React.FC<CheatSheetCreateModalProps> = ({ope
             </Box>
           </DndProvider>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handeClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleCreateCheatSheet}>Create</Button>
+        <DialogActions sx={{display: 'flex', gap: '5px'}}>
+          <CustomButton variant="secondary" onClick={handeClose}>
+            <CloseIcon
+                sx={{
+                  color: "#000048",
+                  width: '20px'
+                }}/>
+            <Typography padding="3px">Cancel</Typography>
+          </CustomButton>
+          <CustomButton variant="primary" onClick={handleCreateCheatSheet}
+                        disabled={isCreating}>
+            <AddIcon sx={{
+              color: "#white",
+              width: '20px'
+            }}/>
+            <Typography padding="3px">Create</Typography>
+          </CustomButton>
         </DialogActions>
       </Dialog>
   );
