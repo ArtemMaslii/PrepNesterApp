@@ -1,8 +1,6 @@
-// components/LikeButton.tsx
 'use client';
-import {useState} from 'react';
-import {IconButton} from '@mui/material';
-import {ThumbUp, ThumbUpOutlined} from '@mui/icons-material';
+import React, {useState} from 'react';
+import {Button} from '@mui/material';
 import {useAuth, useUser} from '@/context';
 import {addLike, removeLike} from '@/lib/api/likes';
 
@@ -14,7 +12,7 @@ interface LikeButtonProps {
   onLikeUpdate?: (newCount: number, isLiked: boolean) => void;
 }
 
-export const LikeButton = (
+export const CommentLikeButton = (
     {
       entityType,
       entityId,
@@ -50,12 +48,22 @@ export const LikeButton = (
   };
 
   return (
-      <IconButton onClick={handleLike} disabled={isLoading}>
-        {isLiked ? (
-            <ThumbUp sx={{color: '#3D54CE'}}/>
-        ) : (
-            <ThumbUpOutlined sx={{color: '#999999'}}/>
-        )}
-      </IconButton>
+      <Button
+          size="small"
+          onClick={() => handleLike()}
+          sx={{
+            minWidth: 0,
+            padding: 0,
+            color: isLiked ? '#000048' : '#666666',
+            textTransform: "none",
+            textDecoration: 'underline',
+            '&:hover': {
+              textDecoration: 'underline',
+              backgroundColor: 'transparent'
+            }
+          }}
+      >
+        {isLiked ? 'Liked' : 'Like'}
+      </Button>
   );
 };

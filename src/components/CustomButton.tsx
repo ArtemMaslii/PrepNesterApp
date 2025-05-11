@@ -18,6 +18,7 @@ export const CustomButton: FC<AddButtonProps> = ({variant, children, ...props}) 
             textTransform: "none",
             border: variant === 'primary' ? 'none' : '1px solid #DDDDDD',
             '&:hover': {backgroundColor: variant === 'primary' ? '#000060' : 'grey'},
+            ...props.sx
           }}
       >
         {children}

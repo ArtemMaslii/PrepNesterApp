@@ -1,7 +1,9 @@
-import {get, post} from "@/lib/api/common";
+import {deleteRequest, get, post, put} from "@/lib/api/common";
 import {Question} from "@/interface/Question";
 import {SortBy} from "@/interface/SortBy";
 import {RequestQuestion} from "@/interface/requestCreateQuestion";
+import {Comment, QuestionDetails, RequestCreateComment} from "@/interface/questionDetails";
+import {RequestUpdateQuestion} from "@/interface/requestUpdateQuestion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL_AUTH || 'http://localhost:8080/api/v1';
 
@@ -26,9 +28,47 @@ export const fetchAllQuestions = (
   return get<Question[]>(url.toString(), token);
 };
 
+export const fetchQuestionById = (
+    token: string,
+    id: string
+): Promise<QuestionDetails> => {
+  return get<QuestionDetails>(`${API_URL}/questions/${id}`, token);
+}
+
+export const fetchSubQuestionById = (
+    token: string,
+    id: string
+): Promise<QuestionDetails> => {
+  return get<QuestionDetails>(`${API_URL}/questions/sub-questions/${id}`, token);
+}
+
 export const createQuestion = (
     token: string,
     question: RequestQuestion
 ): Promise<Question> => {
   return post<Question>(`${API_URL}/questions`, question, token);
+}
+
+export const updateQuestion = (token: string, id: string, updatedBody: RequestUpdateQuestion): Promise<QuestionDetails> => {
+  return put<QuestionDetails>(`${API_URL}/questions/${id}`, updatedBody, token);
+}
+
+export const updateSubQuestion = (token: string, id: string, updatedBody: RequestUpdateQuestion): Promise<QuestionDetails> => {
+  return put<QuestionDetails>(`${API_URL}/questions/sub-questions/${id}`, updatedBody, token);
+}
+
+export const deleteQuestion = (token: string, id: string): Promise<void> => {
+  return deleteRequest<void>(`${API_URL}/questions/${id}`, token);
+}
+
+export const deleteSubQuestion = (token: string, id: string): Promise<void> => {
+  return deleteRequest<void>(`${API_URL}/questions/sub-questions/${id}`, token);
+}
+
+export const createCommentForQuestion = (token: string, questionId: string, body: RequestCreateComment): Promise<Comment> => {
+  return post<Comment>(`${API_URL}/questions/${questionId}/comments`, body, token);
+}
+
+export const createCommentForSubQuestion = (token: string, subQuestionId: string, body: RequestCreateComment): Promise<Comment> => {
+  return post<Comment>(`${API_URL}/questions/${subQuestionId}/comments`, body, token);
 }

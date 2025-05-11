@@ -20,3 +20,10 @@ export const deleteRequest = async <T>(url: string, token: string): Promise<T> =
   });
   return response.data;
 }
+
+export const put = async <T>(url: string, body: unknown, token: string): Promise<T> => {
+  const response = await axios.put<T>(url, body, {
+    headers: token ? {Authorization: `Bearer ${token}`} : {}
+  });
+  return response.data;
+}

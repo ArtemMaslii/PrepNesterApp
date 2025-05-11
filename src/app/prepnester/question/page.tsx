@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useCallback, useEffect, useState} from "react";
-import {Box} from "@mui/material";
+import {Box, Drawer} from "@mui/material";
 import {useCategories, useCheatSheets, useQuestions} from "@/context";
 import {
   QuestionBankHeader,
@@ -17,10 +17,25 @@ import {CreateQuestionModal} from "@/components/questionBank/questionCreateModal
 import {
   CheatSheetCreateModal
 } from "@/components/questionBank/cheatSheetCreateModal/CreateCheatSheetModal";
+import {QuestionDetailsModal} from "@/components/questionBank/questionDetails/QuestionDetailsModal";
 
 export default function QuestionBank() {
   // Context Hooks
-  const {questions, questionsLoading, reloadQuestions, createNewQuestion} = useQuestions();
+  const {
+    questions,
+    questionDetails,
+    questionsLoading,
+    reloadQuestions,
+    createNewQuestion,
+    loadQuestionById,
+    loadSubQuestionById,
+    updateQuestion,
+    updateSubQuestion,
+    deleteQuestion,
+    deleteSubQuestion,
+    createCommentQuestion,
+    createCommentSubQuestion,
+  } = useQuestions();
   const {cheatSheets, cheatSheetsLoading, reloadCheatSheets} = useCheatSheets();
   const {categories} = useCategories();
 
@@ -29,6 +44,7 @@ export default function QuestionBank() {
   const [showLoading, setShowLoading] = useState(false);
   const [questionModalOpen, setQuestionModalOpen] = useState(false);
   const [cheatSheetModalOpen, setCheatSheetModalOpen] = useState(false);
+  const [questionDetailsOpen, setQuestionDetailsOpen] = useState(false);
   const [filters, setFilters] = useState({
     searchTerm: "",
     isPublic: true,
@@ -36,6 +52,19 @@ export default function QuestionBank() {
     contentType: 'all' as 'all' | 'questions' | 'cheatSheets'
   });
   const [prevFilters, setPrevFilters] = useState(filters);
+
+  const handleQuestionClick = useCallback(async (id: string, isSubQuestion: boolean) => {
+    if (!questionDetailsOpen) {
+      if (isSubQuestion) {
+        await loadSubQuestionById(id);
+      } else {
+        await loadQuestionById(id);
+      }
+      setQuestionDetailsOpen(true);
+    } else {
+      setQuestionDetailsOpen(false);
+    }
+  }, []);
 
 
   // Data Loading
@@ -76,6 +105,30 @@ export default function QuestionBank() {
       console.error("Question creation failed:", error);
     }
   };
+
+  const handleUpdateQuestion = async (id: string, title: string, isSubQuestion?: boolean) => {
+    try {
+      isSubQuestion ? await updateSubQuestion(id, title) : await updateQuestion(id, title)
+    } catch (error) {
+      console.error("Question creation failed:", error);
+    }
+  }
+
+  const handleDeleteQuestion = async (id: string, isSubQuestion?: boolean) => {
+    try {
+      isSubQuestion ? await deleteSubQuestion(id) : await deleteQuestion(id);
+    } catch (error) {
+      console.error("Question creation failed:", error);
+    }
+  }
+
+  const handleCreateComment = async (id: string, body: { message: string; parentId?: string }, isSubQuestion: boolean) => {
+    try {
+      isSubQuestion ? await createCommentSubQuestion(id, body) : createCommentQuestion(id, body);
+    } catch (error) {
+      console.error("Question creation failed", error);
+    }
+  }
 
   // Effects
   useEffect(() => {
@@ -169,8 +222,30 @@ export default function QuestionBank() {
                 questions={questions}
                 expandedQuestionIds={expandedQuestionIds}
                 toggleQuestionDrawer={toggleQuestionDrawer}
+                onQuestionClick={handleQuestionClick}
             />
         )}
+
+        <Drawer
+            anchor="right"
+            open={questionDetailsOpen}
+            onClose={() => setQuestionDetailsOpen(false)}
+            sx={{
+              '& .MuiDrawer-paper': {
+                width: '35%',
+                boxSizing: 'border-box',
+              },
+            }}
+        >
+          {questionDetails && (
+              <QuestionDetailsModal
+                  question={questionDetails}
+                  onEdit={handleUpdateQuestion}
+                  onDelete={handleDeleteQuestion}
+                  onAddComment={handleCreateComment}
+                  onClose={() => setQuestionDetailsOpen(false)}/>
+          )}
+        </Drawer>
       </Box>
   );
 }

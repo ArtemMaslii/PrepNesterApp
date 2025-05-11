@@ -9,6 +9,7 @@ type SubQuestionListItemProps = {
   title: string;
   categoryTitle: string;
   commentsCount: number;
+  onQuestionClick: (id: string, isSubQuestion: boolean) => void;
   likesCount: number;
   isLikedByCurrentUser: boolean;
   onLikeUpdate?: (newCount: number) => void;
@@ -22,13 +23,12 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
        commentsCount,
        likesCount,
        isLikedByCurrentUser,
-       onLikeUpdate,
+       onQuestionClick,
      }) => {
       const [currentLikeAmount, setCurrentLikeAmount] = useState(likesCount);
 
       const handleLikeUpdate = (newCount: number) => {
         setCurrentLikeAmount(newCount);
-        onLikeUpdate?.(newCount);
       };
 
       return (
@@ -39,7 +39,10 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
               alignItems="center"
               sx={{padding: '12px 0', borderBottom: '1px solid #EEE'}}
           >
-            <Box display='flex' gap="10px" mt="4px">
+            <Box onClick={() => {
+              onQuestionClick(id, true);
+            }} sx={{cursor: 'pointer'}} display='flex'
+                 gap="10px" mt="4px">
               <QuestionContentPreview
                   title={title}
                   categoryTitle={categoryTitle}

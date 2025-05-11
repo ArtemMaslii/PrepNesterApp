@@ -140,12 +140,20 @@ export const CreateQuestionModal = (
           left: '50%',
           transform: 'translate(-50%, -50%)',
           minWidth: 600,
+          maxWidth: '80vw',
+          maxHeight: '90vh',
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
+          overflow: 'auto',
         }}>
-          <Box marginX='20px'>
+          <Box sx={{
+            overflowY: 'auto',
+            flex: 1,
+            pr: 2,
+            marginX: '20px'
+          }}>
             <Typography sx={{fontSize: '32px', color: '#000048'}}>
               Add question
             </Typography>
@@ -214,7 +222,7 @@ export const CreateQuestionModal = (
 
               <Box marginTop='10px'>
                 {subQuestions.map((q, index) => (
-                    <Box display='flex'>
+                    <Box display='flex' key={index}>
                       <SubdirectoryArrowRightIcon key={index} sx={{color: '#999999'}}/>
                       <Fade
                           in={!q.isRemoving}

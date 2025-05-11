@@ -10,51 +10,62 @@ interface Props {
   question: Question;
   isExpanded: boolean;
   toggleExpand: () => void;
+  onQuestionClick: (id: string, isSubQuestion?: boolean) => void;
   onLikeUpdate?: (newCount: number) => void;
 }
 
-export const QuestionListItem = ({question, isExpanded, toggleExpand, onLikeUpdate}: Props) => {
-  const [currentLikeAmount, setCurrentLikeAmount] = useState(question.likesCount);
+export const QuestionListItem =
+    ({
+       question,
+       isExpanded,
+       toggleExpand,
+       onQuestionClick,
+       onLikeUpdate
+     }: Props) => {
+      const [currentLikeAmount, setCurrentLikeAmount] = useState(question.likesCount);
 
-  const handleLikeUpdate = (newCount: number) => {
-    setCurrentLikeAmount(newCount);
-    onLikeUpdate?.(newCount);
-  };
+      const handleLikeUpdate = (newCount: number) => {
+        setCurrentLikeAmount(newCount);
+        onLikeUpdate?.(newCount);
+      };
 
-  return (
-      <Box sx={{
-        padding: '20px',
-        marginTop: '20px',
-        border: '1px solid #DDDDDD',
-        borderRadius: '14px',
-      }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box display="flex" alignItems="center" gap="10px">
-            {question.subQuestions.length > 0 && (
-                <IconButton onClick={toggleExpand} size="small">
-                  {isExpanded ? <ExpandLess/> : <ExpandMore/>}
-                </IconButton>
+      return (
+          <Box sx={{
+            padding: '20px',
+            marginTop: '20px',
+            border: '1px solid #DDDDDD',
+            borderRadius: '14px',
+          }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Box display="flex" alignItems="center" gap="10px">
+                {question.subQuestions.length > 0 && (
+                    <IconButton onClick={toggleExpand} size="small">
+                      {isExpanded ? <ExpandLess/> : <ExpandMore/>}
+                    </IconButton>
+                )}
+                <Box onClick={() => onQuestionClick(question.id)} sx={{cursor: 'pointer'}}>
+                  <QuestionContentPreview
+                      title={question.title}
+                      categoryTitle={question.category.title}
+                      likesCount={currentLikeAmount}
+                      commentsCount={question.commentsCount}
+                  />
+                </Box>
+              </Box>
+              <Box display='flex' sx={{gap: '18px'}} alignItems="center">
+                <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
+                <LikeButton entityType="questions" entityId={question.id}
+                            initialLikesCount={currentLikeAmount}
+                            initialIsLiked={question.isLikedByCurrentUser}
+                            onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
+              </Box>
+            </Box>
+
+            {isExpanded && (
+                <SubQuestionList subQuestions={question.subQuestions}
+                                 categoryTitle={question.category.title}
+                                 onQuestionClick={onQuestionClick}/>
             )}
-            <QuestionContentPreview
-                title={question.title}
-                categoryTitle={question.category.title}
-                likesCount={currentLikeAmount}
-                commentsCount={question.commentsCount}
-            />
           </Box>
-          <Box display='flex' sx={{gap: '18px'}} alignItems="center">
-            <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
-            <LikeButton entityType="questions" entityId={question.id}
-                        initialLikesCount={currentLikeAmount}
-                        initialIsLiked={question.isLikedByCurrentUser}
-                        onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
-          </Box>
-        </Box>
-
-        {isExpanded && (
-            <SubQuestionList subQuestions={question.subQuestions}
-                             categoryTitle={question.category.title}/>
-        )}
-      </Box>
-  );
-}
+      );
+    }
