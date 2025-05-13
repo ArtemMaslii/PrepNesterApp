@@ -7,5 +7,6 @@ Figure A3. Extended version of Authorization Sequence diagram - OAuth 2.0
 Figure A4. Full size version of Application Infrastructure Diagram
 ![image](https://github.com/user-attachments/assets/7e831e5f-1d87-41e8-b3a6-5ff72ce7829b)
 Figure A5. Detailed version of database structure diagram
-![image](https://github.com/user-attachments/assets/0d648de9-43af-439a-9635-159031322541)
+![image](https://github.com/user-attachments/assets/ef38c83b-8232-4363-8a4f-5946584c3ac0)
+
 
