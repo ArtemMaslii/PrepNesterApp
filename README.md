@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/59615ef5-03a4-42c8-9fe4-d7f2f6d0cd58)Figure A1. Extended version of Use Case Diagram
+Figure A1. Extended version of Use Case Diagram
 ![image](https://github.com/user-attachments/assets/40335921-3f03-4c85-814e-bf5480e12fbf)
 Figure A2. Extended version of Authorization Sequence diagram - Simple Login
 ![image](https://github.com/user-attachments/assets/6163a4de-23e3-4a80-873b-3244d18b7e20)
