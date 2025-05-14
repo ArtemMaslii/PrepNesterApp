@@ -15,5 +15,5 @@ export {
   updateCommentForQuestion,
   updateCommentForSubQuestion,
 } from './question'
-export {fetchAllCheatSheets, createCheatSheet} from './cheatSheet'
+export {fetchAllCheatSheets, fetchCheatSheetById, createCheatSheet} from './cheatSheet'
 export {fetchAllCategories} from './categories'

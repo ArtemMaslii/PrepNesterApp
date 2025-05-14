@@ -2,6 +2,7 @@ import {get, post} from "@/lib/api/common";
 import {CheatSheet} from "@/interface/CheatSheet";
 import {SortBy} from "@/interface/SortBy";
 import {RequestCheatSheet} from "@/interface/requestCreateCheatSheet";
+import {CheatSheetDetails} from "@/interface/cheatSheetDetails";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL_AUTH || 'http://localhost:8080/api/v1';
 
@@ -25,6 +26,10 @@ export const fetchAllCheatSheets = (
 
   return get<CheatSheet[]>(url.toString(), token);
 };
+
+export const fetchCheatSheetById = (token: string, id: string): Promise<CheatSheetDetails> => {
+  return get<CheatSheetDetails>(`${API_URL}/cheatSheets/${id}`, token);
+}
 
 export const createCheatSheet = (
     token: string,

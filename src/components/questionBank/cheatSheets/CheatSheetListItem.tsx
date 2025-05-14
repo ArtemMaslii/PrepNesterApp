@@ -5,6 +5,7 @@ import {CheatSheet} from "@/interface/CheatSheet";
 import FolderIcon from '@mui/icons-material/Folder';
 import {LikeButton} from "@/components";
 import {useState} from "react";
+import {useRouter} from "next/navigation";
 
 interface Props {
   cheatSheet: CheatSheet;
@@ -13,10 +14,15 @@ interface Props {
 
 export const CheatSheetListItem = ({cheatSheet, onLikeUpdate}: Props) => {
   const [currentLikeAmount, setCurrentLikeAmount] = useState(cheatSheet.likesCount);
+  const router = useRouter();
 
   const handleLikeUpdate = (newCount: number) => {
     setCurrentLikeAmount(newCount);
     onLikeUpdate?.(newCount);
+  };
+
+  const handleClick = () => {
+    router.push(`/prepnester/interviewSheet/${cheatSheet.id}`);
   };
 
   return (
@@ -25,7 +31,12 @@ export const CheatSheetListItem = ({cheatSheet, onLikeUpdate}: Props) => {
         marginTop: '20px',
         border: '1px solid #DDDDDD',
         borderRadius: '14px',
-      }}>
+        cursor: 'pointer',
+        '&:hover': {
+          backgroundColor: '#FAFAFA',
+        }
+      }} onClick={handleClick}
+      >
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Box display="flex" alignItems="center" gap="10px">
             <Box sx={{
