@@ -7,6 +7,7 @@ import {GeneralSearch} from "@/components";
 import React, {useCallback, useEffect, useState} from "react";
 import {SkeletonLoader} from "@/components/questionBank";
 import {Status} from "@/interface/Status";
+import {InterviewTable} from "@/components/interviews/InterviewTable";
 
 export default function InterviewSheetPage() {
   const {interviews, interviewLoading, reloadInterviews} = useInterviews()
@@ -15,6 +16,7 @@ export default function InterviewSheetPage() {
     status: undefined as Status | undefined
   });
   const [prevFilters, setPrevFilters] = useState(filters);
+  const [showLoading, setShowLoading] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -36,6 +38,20 @@ export default function InterviewSheetPage() {
     loadData();
   }, [loadData]);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (interviewLoading) {
+      timer = setTimeout(() => {
+        setShowLoading(true);
+      }, 300);
+    } else {
+      setShowLoading(false);
+    }
+
+    return () => clearTimeout(timer);
+  }, [interviewLoading]);
+
   const handleSearch = useCallback((term: string) => {
     setFilters(prev => ({...prev, searchTerm: term}));
   }, []);
@@ -50,7 +66,7 @@ export default function InterviewSheetPage() {
     setFilters(prev => ({...prev, ...newFilters}));
   }, []);
 
-  if (interviewLoading) {
+  if (showLoading) {
     return (
         <Box paddingX="40px" paddingY="20px">
           <InterviewHeader onAddInterviewClick={() => {
@@ -75,6 +91,13 @@ export default function InterviewSheetPage() {
             searchTerm={filters.searchTerm}
         />
         <InterviewSorting currentFilters={filters} onFilterChange={handleFilterChange}/>
+        <InterviewTable
+            interviews={interviews}
+            handleEdit={() => {
+            }}
+            handleDelete={() => {
+            }}
+        />
       </Box>
   );
 }

@@ -75,10 +75,9 @@ export const InterviewSorting = (
                 }}
             >
               <MenuItem value={"undefined"} sx={{color: '#000048'}}>All statuses</MenuItem>
-              <MenuItem value={Status.NOT_STARTED} sx={{color: '#000048'}}>Not started</MenuItem>
               <MenuItem value={Status.IN_PROGRESS} sx={{color: '#000048'}}>In Progress</MenuItem>
               <MenuItem value={Status.CANCELLED} sx={{color: '#000048'}}>Cancelled</MenuItem>
-              <MenuItem value={Status.COMPLETED} sx={{color: '#000048'}}>Completed</MenuItem>
+              <MenuItem value={Status.COMPLETE} sx={{color: '#000048'}}>Complete</MenuItem>
             </Select>
           </FormControl>
         </Box>
