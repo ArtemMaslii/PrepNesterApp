@@ -7,8 +7,10 @@ export interface Comment {
   likesCount: number;
   replies?: Comment[];
   createdAt: string;
+  createdBy: string;
   createdByName: string;
   updatedAt: string;
+  updatedBy: string;
   updatedByName: string;
   isLikedByCurrentUser: boolean;
 }

@@ -11,13 +11,19 @@ import {
   fetchAllQuestions,
   fetchQuestionById,
   fetchSubQuestionById,
+  updateCommentForQuestion,
+  updateCommentForSubQuestion,
   updateQuestion,
   updateSubQuestion,
 } from "@/lib/api";
 import {useAuth, useUser} from "@/context";
 import {SortBy} from "@/interface/SortBy";
 import {RequestQuestion} from "@/interface/requestCreateQuestion";
-import {QuestionDetails, RequestCreateComment} from "@/interface/questionDetails";
+import {
+  QuestionDetails,
+  RequestCreateComment,
+  RequestUpdateComment
+} from "@/interface/questionDetails";
 import {RequestUpdateQuestion} from "@/interface/requestUpdateQuestion";
 
 interface QuestionContext {
@@ -40,6 +46,8 @@ interface QuestionContext {
   deleteSubQuestion: (id: string) => Promise<void>;
   createCommentQuestion: (questionId: string, body: Omit<RequestCreateComment, 'createdBy'>) => Promise<void>;
   createCommentSubQuestion: (subQuestionId: string, body: Omit<RequestCreateComment, 'createdBy'>) => Promise<void>;
+  updateCommentQuestion: (commentId: string, body: RequestUpdateComment) => Promise<void>;
+  updateCommentSubQuestion: (commentId: string, body: RequestUpdateComment) => Promise<void>;
 }
 
 const QuestionContext = createContext<QuestionContext | undefined>(undefined);
@@ -232,6 +240,36 @@ export const QuestionProvider: React.FC<{ children: React.ReactNode }> = ({child
     }
   }
 
+  const updateQuestionComment = async (commentId: string, body: RequestUpdateComment) => {
+    try {
+      if (!token) {
+        throw new Error("Autherntication required");
+      }
+
+      await updateCommentForQuestion(token, commentId, body);
+
+      await loadQuestionById(questionDetails?.id ?? '');
+    } catch (error) {
+      console.error("Failed to create question:", error);
+      throw error;
+    }
+  }
+
+  const updateSubQuestionComment = async (commentId: string, body: RequestUpdateComment) => {
+    try {
+      if (!token) {
+        throw new Error("Autherntication required");
+      }
+
+      await updateCommentForSubQuestion(token, commentId, body);
+
+      await loadSubQuestionById(questionDetails?.id ?? '');
+    } catch (error) {
+      console.error("Failed to create question:", error);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     loadQuestions();
   }, [token]);
@@ -251,7 +289,9 @@ export const QuestionProvider: React.FC<{ children: React.ReactNode }> = ({child
             deleteQuestion: deleteQuestionById,
             deleteSubQuestion: deleteSubQuestionById,
             createCommentQuestion: createQuestionComment,
-            createCommentSubQuestion: createSubQuestionComment
+            createCommentSubQuestion: createSubQuestionComment,
+            updateCommentQuestion: updateQuestionComment,
+            updateCommentSubQuestion: updateSubQuestionComment,
           }}
       >
         {children}

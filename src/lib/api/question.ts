@@ -2,7 +2,12 @@ import {deleteRequest, get, post, put} from "@/lib/api/common";
 import {Question} from "@/interface/Question";
 import {SortBy} from "@/interface/SortBy";
 import {RequestQuestion} from "@/interface/requestCreateQuestion";
-import {Comment, QuestionDetails, RequestCreateComment} from "@/interface/questionDetails";
+import {
+  Comment,
+  QuestionDetails,
+  RequestCreateComment,
+  RequestUpdateComment
+} from "@/interface/questionDetails";
 import {RequestUpdateQuestion} from "@/interface/requestUpdateQuestion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL_AUTH || 'http://localhost:8080/api/v1';
@@ -71,4 +76,12 @@ export const createCommentForQuestion = (token: string, questionId: string, body
 
 export const createCommentForSubQuestion = (token: string, subQuestionId: string, body: RequestCreateComment): Promise<Comment> => {
   return post<Comment>(`${API_URL}/questions/${subQuestionId}/comments`, body, token);
+}
+
+export const updateCommentForQuestion = (token: string, commentId: string, body: RequestUpdateComment): Promise<Comment> => {
+  return put<Comment>(`${API_URL}/questions/comments/${commentId}`, body, token);
+}
+
+export const updateCommentForSubQuestion = (token: string, commentId: string, body: RequestUpdateComment): Promise<Comment> => {
+  return put<Comment>(`${API_URL}/questions/sub-questions/comments/${commentId}`, body, token);
 }

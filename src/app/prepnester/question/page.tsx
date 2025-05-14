@@ -18,6 +18,7 @@ import {
   CheatSheetCreateModal
 } from "@/components/questionBank/cheatSheetCreateModal/CreateCheatSheetModal";
 import {QuestionDetailsModal} from "@/components/questionBank/questionDetails/QuestionDetailsModal";
+import {RequestUpdateComment} from "@/interface/questionDetails";
 
 export default function QuestionBank() {
   // Context Hooks
@@ -35,6 +36,8 @@ export default function QuestionBank() {
     deleteSubQuestion,
     createCommentQuestion,
     createCommentSubQuestion,
+    updateCommentQuestion,
+    updateCommentSubQuestion,
   } = useQuestions();
   const {cheatSheets, cheatSheetsLoading, reloadCheatSheets} = useCheatSheets();
   const {categories} = useCategories();
@@ -125,6 +128,14 @@ export default function QuestionBank() {
   const handleCreateComment = async (id: string, body: { message: string; parentId?: string }, isSubQuestion: boolean) => {
     try {
       isSubQuestion ? await createCommentSubQuestion(id, body) : createCommentQuestion(id, body);
+    } catch (error) {
+      console.error("Question creation failed", error);
+    }
+  }
+
+  const handleUpdateComment = async (commentId: string, body: RequestUpdateComment, isSubQuestion: boolean) => {
+    try {
+      isSubQuestion ? await updateCommentSubQuestion(commentId, body) : await updateCommentQuestion(commentId, body);
     } catch (error) {
       console.error("Question creation failed", error);
     }
@@ -243,7 +254,9 @@ export default function QuestionBank() {
                   onEdit={handleUpdateQuestion}
                   onDelete={handleDeleteQuestion}
                   onAddComment={handleCreateComment}
-                  onClose={() => setQuestionDetailsOpen(false)}/>
+                  onClose={() => setQuestionDetailsOpen(false)}
+                  onEditComment={handleUpdateComment}
+              />
           )}
         </Drawer>
       </Box>

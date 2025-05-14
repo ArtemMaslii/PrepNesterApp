@@ -12,6 +12,8 @@ export {
   deleteSubQuestion,
   createCommentForQuestion,
   createCommentForSubQuestion,
+  updateCommentForQuestion,
+  updateCommentForSubQuestion,
 } from './question'
 export {fetchAllCheatSheets, createCheatSheet} from './cheatSheet'
 export {fetchAllCategories} from './categories'

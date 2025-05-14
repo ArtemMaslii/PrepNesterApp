@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {Box, IconButton, TextField, Typography} from '@mui/material';
-import {Comment, QuestionDetails} from "@/interface/questionDetails";
+import {Comment, QuestionDetails, RequestUpdateComment} from "@/interface/questionDetails";
 import {CommentItem} from "@/components/questionBank/questionDetails/CommentItem";
 import {CustomButton} from "@/components";
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,6 +15,7 @@ interface QuestionDetailsModal {
   onDelete: (id: string, isSubQuestion?: boolean) => void;
   onAddComment: (id: string, body: { message: string, parentId?: string }, isSubQuestion: boolean) => void;
   onClose: () => void;
+  onEditComment: (id: string, body: RequestUpdateComment, isSubQuestion: boolean) => void;
 }
 
 export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
@@ -23,7 +24,8 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
       onEdit,
       onDelete,
       onAddComment,
-      onClose
+      onClose,
+      onEditComment,
     }
 ) => {
   const {questions} = useQuestions();
@@ -54,6 +56,10 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
     onAddComment(question.id, {message: replyText, parentId}, isQuestion);
   };
 
+  const handleUpdateComment = (commentId: string, body: RequestUpdateComment) => {
+    onEditComment(commentId, body, isQuestion);
+  }
+
   const countTotalComments = (comments: Comment[]): number => {
     return comments.reduce((total, comment) => {
       return total + 1 + (comment.replies ? countTotalComments(comment.replies) : 0);
@@ -69,7 +75,7 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
             comment={comment}
             depth={depth}
             onAddReply={handleAddReply}
-            questionId={question.id}
+            onEditComment={handleUpdateComment}
         />
     ));
   };

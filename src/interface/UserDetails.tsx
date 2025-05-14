@@ -8,13 +8,13 @@ export interface UserDetails {
 }
 
 export enum Gender {
-  FEMALE,
-  MALE,
-  PREFER_NOT_TO_SAY,
+  FEMALE = 'FEMALE',
+  MALE = 'MALE',
+  PREFER_NOT_TO_SAY = 'PREFER_NOT_TO_SAY',
 }
 
 export enum Role {
-  GUEST,
-  CANDIDATE,
-  ADMIN,
+  GUEST = 'GUEST',
+  CANDIDATE = 'CANDIDATE',
+  ADMIN = 'ADMIN',
 }
