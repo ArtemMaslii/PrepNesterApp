@@ -9,7 +9,7 @@ Figure A4. Full size version of Application Infrastructure Diagram
 Figure A5. Detailed version of database structure diagram
 ![image](https://github.com/user-attachments/assets/ef38c83b-8232-4363-8a4f-5946584c3ac0)
 Figure A6. Question Bank with various questions
-![image](https://github.com/user-attachments/assets/6fdc2a24-3ccc-4af2-96d0-e2fb107a5ad1)
+![image](https://github.com/user-attachments/assets/aa99a2e9-e261-4397-9afe-fe75c896a81d)
 Figure A7. Question Bank Sorting Options
 ![image](https://github.com/user-attachments/assets/c91404c4-ba1b-4ade-824f-28cb2fa5e59f)
 Figure A8. Question Bank Privacy Sorting
