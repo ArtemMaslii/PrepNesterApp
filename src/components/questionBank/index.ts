@@ -1,5 +1,4 @@
 export {QuestionBankHeader} from './QuestionBankHeader';
-export {QuestionBankSearch} from './QuestionBankSearch';
 export {QuestionList} from './QuestionList';
 export {QuestionListItem} from './QuestionListItem';
 export {SubQuestionList} from './SubQuestionList';

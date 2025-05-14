@@ -5,7 +5,6 @@ import {Box, Drawer} from "@mui/material";
 import {useCategories, useCheatSheets, useQuestions} from "@/context";
 import {
   QuestionBankHeader,
-  QuestionBankSearch,
   QuestionBankSorting,
   QuestionList,
   SkeletonLoader
@@ -19,6 +18,7 @@ import {
 } from "@/components/questionBank/cheatSheetCreateModal/CreateCheatSheetModal";
 import {QuestionDetailsModal} from "@/components/questionBank/questionDetails/QuestionDetailsModal";
 import {RequestUpdateComment} from "@/interface/questionDetails";
+import {GeneralSearch} from "@/components";
 
 export default function QuestionBank() {
   // Context Hooks
@@ -188,7 +188,7 @@ export default function QuestionBank() {
       <Box paddingX="40px" paddingY="20px">
         <QuestionBankHeader onAddQuestionClick={() => setQuestionModalOpen(true)}
                             onAddInterviewSheetClick={() => setCheatSheetModalOpen(true)}/>
-        <QuestionBankSearch
+        <GeneralSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
             searchTerm={filters.searchTerm}
@@ -202,7 +202,7 @@ export default function QuestionBank() {
       <Box paddingX="40px" paddingY="20px">
         <QuestionBankHeader onAddQuestionClick={() => setQuestionModalOpen(true)}
                             onAddInterviewSheetClick={() => setCheatSheetModalOpen(true)}/>
-        <QuestionBankSearch
+        <GeneralSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
             searchTerm={filters.searchTerm}

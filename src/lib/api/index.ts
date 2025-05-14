@@ -17,3 +17,4 @@ export {
 } from './question'
 export {fetchAllCheatSheets, fetchCheatSheetById, createCheatSheet} from './cheatSheet'
 export {fetchAllCategories} from './categories'
+export {fetchAllInterviews} from './interview'

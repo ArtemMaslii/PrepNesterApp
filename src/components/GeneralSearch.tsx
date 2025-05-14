@@ -6,13 +6,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import {CustomButton, Search} from "@/components";
 import {useState} from "react";
 
-interface QuestionBankSearchProps {
+interface GeneralSearchProps {
   onSearch: (term: string) => void;
   onClear: () => void;
   searchTerm: string;
 }
 
-export const QuestionBankSearch = ({onSearch, onClear, searchTerm}: QuestionBankSearchProps) => {
+export const GeneralSearch = ({onSearch, onClear, searchTerm}: GeneralSearchProps) => {
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
   const handleLocalSearch = (term: string) => {
