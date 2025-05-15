@@ -1,2 +1,5 @@
 export {InterviewDetails} from './InterviewDetails'
 export {InterviewCandidateDetails} from './InterviewCandidateDetails'
+export {InterviewUpdateDetails} from './InterviewUpdateDetails'
+export {InterviewUpdateCandidateDetails} from './InterviewUpdateCandidateDetails'
+export {InterviewCreateDetails} from './InterviewCreateDetails'

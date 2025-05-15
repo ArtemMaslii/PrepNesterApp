@@ -19,7 +19,8 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
   const isOnQuestionBank =
       pathname === '/prepnester/question' ||
       pathname?.startsWith('/prepnester/interviewSheet/');
-  const isOnInterviewBank = pathname === '/prepnester/interviews';
+  const isOnInterviewBank = pathname === '/prepnester/interviews' ||
+      pathname?.startsWith('/prepnester/interviews/');
 
   return (
       <>

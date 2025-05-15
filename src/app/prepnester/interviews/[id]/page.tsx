@@ -1,6 +1,6 @@
 'use client';
 
-import {use, useEffect, useState} from "react";
+import React, {use, useEffect, useState} from "react";
 import {useInterviews} from "@/context";
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/components/interviewDetails";
 import {useRouter} from "next/navigation";
 import {CustomButton} from "@/components";
+import {InterviewUpdateDetails} from "@/interface/interviewDetails";
 
 function TabPanel(props: { children?: React.ReactNode; index: number; value: number }) {
   const {children, value, index, ...other} = props;
@@ -28,7 +29,12 @@ function TabPanel(props: { children?: React.ReactNode; index: number; value: num
 }
 
 export default function InterviewSheetPage({params}: { params: Promise<{ id: string }> }) {
-  const {interviewDetails, loadInterviewDetails} = useInterviews();
+  const {
+    interviewDetails,
+    interviewLoading,
+    updateInterview,
+    loadInterviewDetails
+  } = useInterviews();
   const router = useRouter();
   const {id} = use(params);
   const [tabValue, setTabValue] = useState(0);
@@ -37,8 +43,6 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
     const fetchData = async () => {
       try {
         await loadInterviewDetails(id);
-
-        // if ()
       } catch (err) {
         console.error("Failed to load interview details:", err);
       }
@@ -51,8 +55,18 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
     setTabValue(newValue);
   };
 
+  const handleSaveInterview = async (body: InterviewUpdateDetails) => {
+    try {
+      await updateInterview(id, body);
+    } catch (err) {
+      console.error("Failed to load interview details:", err);
+    } finally {
+      router.push('/prepnester/interviews');
+    }
+  }
+
   const handleCancelInterview = () => {
-    router.back();
+    router.push('/prepnester/interviews');
   };
 
   if (!interviewDetails) {
@@ -80,9 +94,6 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
         <InterviewDetailsHeader
             candidateFullName={interviewDetails.candidate.fullName}
             candidatePosition={interviewDetails.openPosition}
-            onSaveInterviewClick={() => {
-            }}
-            onCancelInterviewClick={handleCancelInterview}
         />
 
         <Box sx={{borderBottom: 1, borderColor: 'divider', mt: 3}}>
@@ -93,7 +104,9 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
         </Box>
 
         <TabPanel value={tabValue} index={0}>
-          <InterviewInfoTab interviewDetails={interviewDetails}/>
+          <InterviewInfoTab interviewDetails={interviewDetails}
+                            onCancelInterviewClick={handleCancelInterview}
+                            onSaveInterviewClick={handleSaveInterview}/>
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>

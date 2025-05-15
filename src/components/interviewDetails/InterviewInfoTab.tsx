@@ -1,6 +1,6 @@
 'use client';
 
-import {InterviewDetails} from "@/interface/interviewDetails";
+import {InterviewDetails, InterviewUpdateDetails} from "@/interface/interviewDetails";
 import React, {FC, useState} from "react";
 import {Status} from "@/interface/Status";
 import {
@@ -12,14 +12,25 @@ import {
   TextField,
   Typography
 } from "@mui/material";
+import {CustomButton} from "@/components";
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
 interface InterviewInfoTabProps {
-  interviewDetails: InterviewDetails
+  interviewDetails: InterviewDetails,
+  onCancelInterviewClick: () => void;
+  onSaveInterviewClick: (body: InterviewUpdateDetails) => void;
 }
 
-export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) => {
+export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
+    {
+      interviewDetails,
+      onCancelInterviewClick,
+      onSaveInterviewClick
+    }
+) => {
   const [status, setStatus] = useState<Status>(interviewDetails.status);
-  const [candidate, setCandidate] = useState<{
+  const [candidateDto, setCandidateDto] = useState<{
     fullName: string,
     email: string,
     phoneNumber: string,
@@ -28,7 +39,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
     email: interviewDetails.candidate.email,
     phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '',
   });
-  const [interview, setInterview] = useState<{
+  const [interviewDto, setInterviewDto] = useState<{
     openPosition: string,
     department: string,
     status: Status,
@@ -48,12 +59,58 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
   const handleStatusChange = (event: SelectChangeEvent) => {
     const newStatus = event.target.value as Status;
     setStatus(newStatus);
-    // updateInterviewStatus(interviewDetails.id, newStatus);
+    setInterviewDto(prev => ({...prev, status: newStatus}));
   };
 
-  const handleInputChange = (field: keyof typeof candidate) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSave = () => {
+    const data: InterviewUpdateDetails = {
+      candidate: {
+        fullName: candidateDto.fullName,
+        email: candidateDto.email,
+        phoneNumber: candidateDto.phoneNumber.slice(1),
+      },
+      openPosition: interviewDto.openPosition,
+      departmentName: interviewDto.department,
+      status: interviewDto.status,
+      notes: interviewDto.notes,
+      cheatSheetId: interviewDetails.cheatSheetId
+    };
+
+    if (hasNotChanged(data)) {
+      return
+    }
+
+    onSaveInterviewClick(data);
+  }
+
+  const handleCancel = () => {
+    setInterviewDto({
+      openPosition: interviewDetails.openPosition,
+      department: interviewDetails.department,
+      status: interviewDetails.status,
+      notes: interviewDetails.notes ? interviewDetails.notes : '',
+    });
+    setCandidateDto({
+      fullName: interviewDetails.candidate.fullName,
+      email: interviewDetails.candidate.email,
+      phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '',
+    });
+    onCancelInterviewClick();
+  }
+
+  const hasNotChanged = (data: InterviewUpdateDetails) => {
+    return data.candidate.fullName === interviewDetails.candidate.fullName
+        && data.candidate.email === interviewDetails.candidate.email
+        && data.candidate.phoneNumber === interviewDetails.candidate.phoneNumber
+        && data.openPosition === interviewDetails.openPosition
+        && data.departmentName === interviewDetails.department
+        && data.status === interviewDetails.status
+        && data.notes === interviewDetails.notes
+  }
+
+  const handleInputChange = (field: keyof typeof candidateDto) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setCandidate(prev => ({...prev, [field]: value}));
+    setCandidateDto(prev => ({...prev, [field]: value}));
 
     if (field === 'email' && value && !/^\S+@\S+\.\S+$/.test(value)) {
       setErrors(prev => ({...prev, email: 'Invalid email format'}));
@@ -75,14 +132,25 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
     }
   }
 
-  const handleInputInterviewChange = (field: keyof typeof interview) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputInterviewChange = (field: keyof typeof interviewDto) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setInterview(prev => ({...prev, [field]: value}));
+    setInterviewDto(prev => ({...prev, [field]: value}));
   };
 
 
   return (
       <Box>
+        <Box display="flex" alignItems="center" justifyContent="flex-end" gap="8px">
+          <CustomButton variant="secondary" onClick={handleCancel}>
+            <CloseIcon sx={{color: "#000048"}}/>
+            <Typography padding="8px">Cancel</Typography>
+          </CustomButton>
+          <CustomButton variant="primary" onClick={handleSave}>
+            <AddIcon sx={{color: "white"}}/>
+            <Typography padding="8px">Save</Typography>
+          </CustomButton>
+        </Box>
+        <Divider sx={{my: 3}}/>
         <Typography
             gutterBottom
             sx={{fontWeight: 'bold', mb: 3, color: '#000048', fontSize: '24px', lineHeight: '32px'}}
@@ -98,7 +166,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
                   <span style={{color: '#FA3131'}}>*</span>
                 </Box>
               }
-              value={candidate.fullName}
+              value={candidateDto.fullName}
               onChange={handleInputChange('fullName')}
               margin="normal"
               fullWidth
@@ -125,7 +193,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
                     <span style={{color: '#FA3131'}}>*</span>
                   </Box>
                 }
-                value={candidate.email}
+                value={candidateDto.email}
                 onChange={handleInputChange('email')}
                 margin="normal"
                 fullWidth
@@ -136,7 +204,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
 
             <TextField
                 label="Phone number"
-                value={candidate.phoneNumber}
+                value={candidateDto.phoneNumber}
                 onChange={handleInputChange('phoneNumber')}
                 margin="normal"
                 fullWidth
@@ -166,7 +234,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
                       <span style={{color: '#FA3131'}}>*</span>
                     </Box>
                   }
-                  value={interview.openPosition}
+                  value={interviewDto.openPosition}
                   onChange={handleInputInterviewChange('openPosition')}
                   margin="normal"
                   fullWidth
@@ -190,7 +258,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
                       <span style={{color: '#FA3131'}}>*</span>
                     </Box>
                   }
-                  value={interview.department}
+                  value={interviewDto.department}
                   onChange={handleInputInterviewChange('department')}
                   margin="normal"
                   fullWidth
@@ -263,17 +331,45 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = ({interviewDetails}) 
             </Typography>
 
             <Box sx={{marginTop: '5px'}}>
-              <Typography mb={1} sx={{color: '#666666'}}>Notes</Typography>
               <TextField
-                  sx={{color: '#000048', minWidth: '780px', borderRadius: '12px'}}
+                  label={
+                    <Box display='flex' gap='5px' sx={{color: '#666666'}}>
+                      Notes
+                    </Box>
+                  }
+                  value={interviewDto.notes}
+                  onChange={handleInputInterviewChange('notes')}
+                  margin="normal"
+                  fullWidth
                   multiline
                   rows={4}
-                  value={interview.notes}
-                  onChange={() => handleInputInterviewChange("notes")}
                   placeholder="Add notes or details about the candidate..."
+                  sx={{
+                    minWidth: '780px',
+                    borderRadius: '12px',
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#DDDDDD',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#DDDDDD',
+                      },
+                    },
+                  }}
               />
             </Box>
           </Box>
+        </Box>
+        <Divider sx={{my: 5}}/>
+        <Box display="flex" alignItems="center" justifyContent="flex-end" gap="8px">
+          <CustomButton variant="secondary" onClick={handleCancel}>
+            <CloseIcon sx={{color: "#000048"}}/>
+            <Typography padding="8px">Cancel</Typography>
+          </CustomButton>
+          <CustomButton variant="primary" onClick={handleSave}>
+            <AddIcon sx={{color: "white"}}/>
+            <Typography padding="8px">Save</Typography>
+          </CustomButton>
         </Box>
       </Box>
   );
