@@ -2,21 +2,32 @@
 
 import {useInterviews} from "@/context";
 import {Box} from "@mui/material";
-import {InterviewHeader, InterviewSorting} from "@/components/interviews";
+import {CreateInterviewModal, InterviewHeader, InterviewSorting} from "@/components/interviews";
 import {GeneralSearch} from "@/components";
 import React, {useCallback, useEffect, useState} from "react";
 import {SkeletonLoader} from "@/components/questionBank";
 import {Status} from "@/interface/Status";
 import {InterviewTable} from "@/components/interviews/InterviewTable";
+import {InterviewCreateDetails} from "@/interface/interviewDetails";
+import {useRouter} from "next/navigation";
 
 export default function InterviewSheetPage() {
-  const {interviews, interviewLoading, reloadInterviews, deleteInterview} = useInterviews()
+  const {
+    interviews,
+    interviewDetails,
+    interviewLoading,
+    reloadInterviews,
+    createInterview,
+    deleteInterview
+  } = useInterviews()
   const [filters, setFilters] = useState({
     searchTerm: "",
     status: undefined as Status | undefined
   });
   const [prevFilters, setPrevFilters] = useState(filters);
   const [showLoading, setShowLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter()
 
   const loadData = useCallback(async () => {
     try {
@@ -81,6 +92,15 @@ export default function InterviewSheetPage() {
     );
   }
 
+  const handleCreateQuestion = async (data: Omit<InterviewCreateDetails, 'createdBy'>) => {
+    try {
+      await createInterview(data);
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Question creation failed:", error);
+    }
+  };
+
   const handleDeleteInterview = async (id: string) => {
     try {
       await deleteInterview(id);
@@ -91,8 +111,7 @@ export default function InterviewSheetPage() {
 
   return (
       <Box paddingX="40px" paddingY="20px">
-        <InterviewHeader onAddInterviewClick={() => {
-        }}/>
+        <InterviewHeader onAddInterviewClick={() => setModalOpen(true)}/>
         <GeneralSearch
             onSearch={handleSearch}
             onClear={handleClearSearch}
@@ -103,6 +122,9 @@ export default function InterviewSheetPage() {
             interviews={interviews}
             handleDelete={handleDeleteInterview}
         />
+
+        <CreateInterviewModal open={modalOpen} onClose={() => setModalOpen(false)}
+                              onSubmit={handleCreateQuestion}/>
       </Box>
   );
 }

@@ -1,24 +1,15 @@
-import {Box, Drawer, Typography} from "@mui/material";
+import {Box, Button, Drawer, Typography} from "@mui/material";
 import {CheatSheetCategory} from "@/components/questionBank/cheatSheetDetails";
 import {QuestionDetailsModal} from "@/components/questionBank/questionDetails";
 import React, {useCallback, useEffect, useState} from "react";
-import {useCheatSheets, useQuestions} from "@/context";
+import {useCheatSheets, useInterviews, useQuestions} from "@/context";
 import {RequestUpdateComment} from "@/interface/questionDetails";
+import {CheatSheetInterviewModal} from "./CheatSheetInterviewModal";
+import {InterviewUpdateDetails} from "@/interface/interviewDetails";
 
 export const CheatSheetInterviewTab = ({id}: { id: string }) => {
-  if (!id) {
-    return (
-        <Box>
-          <Typography sx={{fontSize: '30px', color: '#000048'}}>No interview process
-            yet</Typography>
-          <Typography sx={{fontSize: '18px', color: '#333333'}}>
-            Start interview process, track progress, add notes and manage all related information in
-            one place
-          </Typography>
-        </Box>
-    )
-  }
-
+  const [assignmentModalOpen, setAssignmentModalOpen] = useState(false);
+  const {interviewDetails, updateInterview} = useInterviews();
   const {
     questionDetails,
     updateQuestion,
@@ -54,21 +45,30 @@ export const CheatSheetInterviewTab = ({id}: { id: string }) => {
     }
   }, []);
 
+  const handleAssignClick = useCallback(async (cheatSheetId: string) => {
+    if (interviewDetails) {
+      const data: InterviewUpdateDetails = {
+        candidate: {
+          fullName: interviewDetails.candidate.fullName,
+          email: interviewDetails.candidate.email,
+          phoneNumber: interviewDetails.candidate.phoneNumber
+        },
+        openPosition: interviewDetails.openPosition,
+        departmentName: interviewDetails.department,
+        status: interviewDetails.status,
+        notes: interviewDetails.notes,
+        cheatSheetId: cheatSheetId
+      }
+
+      await updateInterview(interviewDetails.id, data)
+    }
+  }, []);
+
   useEffect(() => {
     if (id) {
       loadCheatSheetDetails(id);
     }
   }, [id]);
-
-  if (!cheatSheetDetails) {
-    return (
-        <Box sx={{padding: '24px'}}>
-          <Typography variant="h4" sx={{marginBottom: '24px', fontWeight: 700}}>
-            Loading Cheat Sheet...
-          </Typography>
-        </Box>
-    );
-  }
 
   const handleUpdateQuestion = async (id: string, title: string, isSubQuestion?: boolean) => {
     try {
@@ -100,6 +100,54 @@ export const CheatSheetInterviewTab = ({id}: { id: string }) => {
     } catch (error) {
       console.error("Question creation failed", error);
     }
+  }
+
+  if (!cheatSheetDetails) {
+    return <></>
+  }
+
+  if (!id) {
+    return (
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column'
+        }}>
+          <Typography sx={{fontSize: '30px', color: '#000048'}}>No interview process
+            yet</Typography>
+          <Typography sx={{fontSize: '18px', color: '#333333'}}>
+            Start interview process, track progress, add notes and manage all related information
+            in
+            one place
+          </Typography>
+          <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: 'none',
+                border: '1px solid #DDDDDD',
+                borderRadius: '18px',
+                marginTop: '50px',
+                textDecoration: 'none',
+                textTransform: 'none',
+                padding: '10px',
+
+              }}
+              onClick={() => setAssignmentModalOpen(true)}
+          >
+            <Typography sx={{fontSize: '16px', color: '#000048'}}>
+              Assign Cheat Sheet to the candidate
+            </Typography>
+          </Button>
+
+          <CheatSheetInterviewModal
+              open={assignmentModalOpen}
+              onClose={() => setAssignmentModalOpen(true)}
+              onAssign={handleAssignClick}
+          />
+        </Box>
+    )
   }
 
   return (

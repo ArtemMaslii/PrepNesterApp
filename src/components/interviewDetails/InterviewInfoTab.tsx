@@ -37,7 +37,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
   }>({
     fullName: interviewDetails.candidate.fullName,
     email: interviewDetails.candidate.email,
-    phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '',
+    phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '+',
   });
   const [interviewDto, setInterviewDto] = useState<{
     openPosition: string,

@@ -76,7 +76,7 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({chil
         }
 
         const data = await createInterview(token, requestData);
-        setInterviewDetails(data)
+        await loadInterviews()
       }
     } catch (error) {
       console.error("Failed to fetch interviews", error);

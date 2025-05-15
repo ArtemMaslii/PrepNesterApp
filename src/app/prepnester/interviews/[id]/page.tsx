@@ -31,7 +31,6 @@ function TabPanel(props: { children?: React.ReactNode; index: number; value: num
 export default function InterviewSheetPage({params}: { params: Promise<{ id: string }> }) {
   const {
     interviewDetails,
-    interviewLoading,
     updateInterview,
     loadInterviewDetails
   } = useInterviews();
