@@ -10,7 +10,7 @@ import {Status} from "@/interface/Status";
 import {InterviewTable} from "@/components/interviews/InterviewTable";
 
 export default function InterviewSheetPage() {
-  const {interviews, interviewLoading, reloadInterviews} = useInterviews()
+  const {interviews, interviewLoading, reloadInterviews, deleteInterview} = useInterviews()
   const [filters, setFilters] = useState({
     searchTerm: "",
     status: undefined as Status | undefined
@@ -81,6 +81,14 @@ export default function InterviewSheetPage() {
     );
   }
 
+  const handleDeleteInterview = async (id: string) => {
+    try {
+      await deleteInterview(id);
+    } catch (error) {
+      console.error("Question creation failed:", error);
+    }
+  }
+
   return (
       <Box paddingX="40px" paddingY="20px">
         <InterviewHeader onAddInterviewClick={() => {
@@ -93,10 +101,7 @@ export default function InterviewSheetPage() {
         <InterviewSorting currentFilters={filters} onFilterChange={handleFilterChange}/>
         <InterviewTable
             interviews={interviews}
-            handleEdit={() => {
-            }}
-            handleDelete={() => {
-            }}
+            handleDelete={handleDeleteInterview}
         />
       </Box>
   );

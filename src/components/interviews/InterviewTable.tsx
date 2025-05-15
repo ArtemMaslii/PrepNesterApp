@@ -13,16 +13,19 @@ import {
 import {Interview} from "@/interface/interviewPreview/Interview";
 import {FC} from "react";
 import {Status} from "@/interface/Status";
+import {useRouter} from "next/navigation";
 
 interface InterviewTableProps {
   interviews: Interview[];
-  handleEdit: (id: string) => void;
   handleDelete: (id: string) => void;
+  handleEdit?: (id: string) => void;
 }
 
 export const InterviewTable: FC<InterviewTableProps> = (
-    {interviews, handleEdit, handleDelete}
+    {interviews, handleDelete, handleEdit}
 ) => {
+  const router = useRouter()
+
   const getStatusColor = (status: Status): { bgColor: string, color: string } => {
     switch (status) {
       case Status.IN_PROGRESS:
@@ -30,7 +33,7 @@ export const InterviewTable: FC<InterviewTableProps> = (
       case Status.CANCELLED:
         return {bgColor: "#E5E5E5", color: "#000048"}
       case Status.COMPLETE:
-        return {bgColor: "#DDDDDD", color: "#000048"}
+        return {bgColor: "#FFFFFF", color: "#000048"}
     }
   }
 
@@ -53,6 +56,11 @@ export const InterviewTable: FC<InterviewTableProps> = (
     const year = date.getFullYear();
     return `${month} ${day}, ${year}`;
   };
+
+  const handleEditClick = (id: string) => {
+    router.push(`/prepnester/interviews/${id}`)
+    handleEdit ? handleEdit(id) : null;
+  }
 
   if (interviews.length === 0) {
     return (
@@ -131,7 +139,12 @@ export const InterviewTable: FC<InterviewTableProps> = (
           <TableBody>
             {interviews.map((interview) => (
                 <TableRow key={interview.id}>
-                  <TableCell sx={{color: '#000048', paddingLeft: '16px'}}>
+                  <TableCell
+                      sx={{
+                        color: '#000048',
+                        paddingLeft: '16px',
+                      }}
+                  >
                     {interview.candidateFullName}
                   </TableCell>
                   <TableCell sx={{paddingLeft: '16px'}}>
@@ -155,7 +168,7 @@ export const InterviewTable: FC<InterviewTableProps> = (
                     <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
                       <Button
                           variant="text"
-                          onClick={() => handleEdit(interview.id)}
+                          onClick={() => handleEditClick(interview.id)}
                           sx={{
                             color: '#000048',
                             textTransform: 'none',
