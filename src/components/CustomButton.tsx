@@ -1,8 +1,9 @@
 import {Button, ButtonProps} from "@mui/material";
-import React, {FC} from "react";
+import React, {FC, ReactNode} from "react";
 
 type AddButtonProps = {
   variant: 'primary' | 'secondary';
+  children: ReactNode;
 } & ButtonProps;
 
 export const CustomButton: FC<AddButtonProps> = ({variant, children, ...props}) => {
