@@ -1,15 +1,19 @@
 'use client';
 
 import {InterviewDetails, InterviewUpdateDetails} from "@/interface/interviewDetails";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import React, {FC, useState} from "react";
 import {Status} from "@/interface/Status";
 import {
   Box,
   Divider,
+  IconButton,
+  InputAdornment,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
+  Tooltip,
   Typography
 } from "@mui/material";
 import {CustomButton} from "@/components";
@@ -30,14 +34,17 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
     }
 ) => {
   const [status, setStatus] = useState<Status>(interviewDetails.status);
+  const [copied, setCopied] = useState(false);
   const [candidateDto, setCandidateDto] = useState<{
     fullName: string,
     email: string,
     phoneNumber: string,
+    rawPassword: string
   }>({
     fullName: interviewDetails.candidate.fullName,
     email: interviewDetails.candidate.email,
     phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '+',
+    rawPassword: interviewDetails.candidate.rawPassword
   });
   const [interviewDto, setInterviewDto] = useState<{
     openPosition: string,
@@ -60,6 +67,12 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
     const newStatus = event.target.value as Status;
     setStatus(newStatus);
     setInterviewDto(prev => ({...prev, status: newStatus}));
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(candidateDto.rawPassword);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleSave = () => {
@@ -94,6 +107,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
       fullName: interviewDetails.candidate.fullName,
       email: interviewDetails.candidate.email,
       phoneNumber: interviewDetails.candidate.phoneNumber ? '+' + interviewDetails.candidate.phoneNumber : '',
+      rawPassword: interviewDetails.candidate.rawPassword
     });
     onCancelInterviewClick();
   }
@@ -213,6 +227,46 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                 sx={{mt: 3, height: '30px'}}
             />
           </Box>
+          <TextField
+              label={
+                <Box display="flex" gap="5px" sx={{color: '#666666'}}>
+                  Password
+                  <span style={{color: '#FA3131'}}>*</span>
+                </Box>
+              }
+              type="password"
+              value={candidateDto.rawPassword}
+              margin="normal"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+                endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={copied ? 'Copied' : 'Copy password'} arrow>
+                        <IconButton
+                            onClick={handleCopy}
+                            edge="end"
+                            aria-label="copy password"
+                        >
+                          <ContentCopyIcon/>
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                ),
+              }}
+              sx={{
+                minWidth: '780px',
+                height: '30px',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#DDDDDD',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#DDDDDD',
+                  },
+                },
+              }}
+          />
 
           <Divider sx={{my: 5}}/>
         </Box>
