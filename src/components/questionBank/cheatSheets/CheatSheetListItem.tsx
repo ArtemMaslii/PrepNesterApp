@@ -1,3 +1,4 @@
+'use client';
 import {Box} from "@mui/material";
 import {ChatBubbleOutlineOutlined} from "@mui/icons-material";
 import {CheatSheetContentPreview} from "./CheatSheetContentPreview"
@@ -6,6 +7,8 @@ import FolderIcon from '@mui/icons-material/Folder';
 import {LikeButton} from "@/components";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
+import {useUser} from "@/context";
+import {Role} from "@/interface/UserDetails";
 
 interface Props {
   cheatSheet: CheatSheet;
@@ -14,6 +17,7 @@ interface Props {
 
 export const CheatSheetListItem = ({cheatSheet, onLikeUpdate}: Props) => {
   const [currentLikeAmount, setCurrentLikeAmount] = useState(cheatSheet.likesCount);
+  const {user} = useUser()
   const router = useRouter();
 
   const handleLikeUpdate = (newCount: number) => {
@@ -56,13 +60,15 @@ export const CheatSheetListItem = ({cheatSheet, onLikeUpdate}: Props) => {
                 commentsCount={cheatSheet.commentsCount}
             />
           </Box>
-          <Box display='flex' sx={{gap: '18px'}} alignItems="center">
-            <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
-            <LikeButton entityType="cheatSheets" entityId={cheatSheet.id}
-                        initialLikesCount={currentLikeAmount}
-                        initialIsLiked={cheatSheet.isLikedByCurrentUser}
-                        onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
-          </Box>
+          {user?.role === Role.ADMIN ? (
+              <Box display='flex' sx={{gap: '18px'}} alignItems="center">
+                <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
+                <LikeButton entityType="cheatSheets" entityId={cheatSheet.id}
+                            initialLikesCount={currentLikeAmount}
+                            initialIsLiked={cheatSheet.isLikedByCurrentUser}
+                            onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
+              </Box>
+          ) : null}
         </Box>
       </Box>
   );

@@ -14,6 +14,8 @@ import {Interview} from "@/interface/interviewPreview/Interview";
 import {FC} from "react";
 import {Status} from "@/interface/Status";
 import {useRouter} from "next/navigation";
+import {Role} from "@/interface/UserDetails";
+import {useUser} from "@/context";
 
 interface InterviewTableProps {
   interviews: Interview[];
@@ -24,6 +26,7 @@ interface InterviewTableProps {
 export const InterviewTable: FC<InterviewTableProps> = (
     {interviews, handleDelete, handleEdit}
 ) => {
+  const {user} = useUser()
   const router = useRouter()
 
   const getStatusColor = (status: Status): { bgColor: string, color: string } => {
@@ -166,32 +169,50 @@ export const InterviewTable: FC<InterviewTableProps> = (
                   </TableCell>
                   <TableCell align="right" sx={{paddingRight: '16px'}}>
                     <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
-                      <Button
-                          variant="text"
-                          onClick={() => handleEditClick(interview.id)}
-                          sx={{
-                            color: '#000048',
-                            textTransform: 'none',
-                            fontSize: '13px',
-                            minWidth: 0,
-                            padding: '4px 8px'
-                          }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                          variant="text"
-                          onClick={() => handleDelete(interview.id)}
-                          sx={{
-                            color: '#FF5252',
-                            textTransform: 'none',
-                            fontSize: '13px',
-                            minWidth: 0,
-                            padding: '4px 8px'
-                          }}
-                      >
-                        Delete
-                      </Button>
+                      {user?.role === Role.ADMIN ? (
+                          <>
+                            <Button
+                                variant="text"
+                                onClick={() => handleEditClick(interview.id)}
+                                sx={{
+                                  color: '#000048',
+                                  textTransform: 'none',
+                                  fontSize: '13px',
+                                  minWidth: 0,
+                                  padding: '4px 8px'
+                                }}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                                variant="text"
+                                onClick={() => handleDelete(interview.id)}
+                                sx={{
+                                  color: '#FF5252',
+                                  textTransform: 'none',
+                                  fontSize: '13px',
+                                  minWidth: 0,
+                                  padding: '4px 8px'
+                                }}
+                            >
+                              Delete
+                            </Button>
+                          </>
+                      ) : (
+                          <Button
+                              variant="text"
+                              onClick={() => handleEditClick(interview.id)}
+                              sx={{
+                                color: '#000048',
+                                textTransform: 'none',
+                                fontSize: '13px',
+                                minWidth: 0,
+                                padding: '4px 8px'
+                              }}
+                          >
+                            View
+                          </Button>
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>

@@ -7,7 +7,8 @@ import {CommentItem} from "@/components/questionBank/questionDetails/CommentItem
 import {CustomButton} from "@/components";
 import CloseIcon from "@mui/icons-material/Close";
 import {Delete as DeleteIcon, Edit as EditIcon} from "@mui/icons-material";
-import {useQuestions} from "@/context";
+import {useQuestions, useUser} from "@/context";
+import {Role} from "@/interface/UserDetails";
 
 interface QuestionDetailsModal {
   question: QuestionDetails;
@@ -28,6 +29,7 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
       onEditComment,
     }
 ) => {
+  const {user} = useUser()
   const {questions} = useQuestions();
   const [commentText, setCommentText] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -134,7 +136,8 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
                 <CustomButton onClick={handleSaveEdit} variant="primary" sx={{p: 2}}>
                   Save
                 </CustomButton>
-                <CustomButton onClick={() => setIsEditing(false)} variant="secondary" sx={{p: 2}}>
+                <CustomButton onClick={() => setIsEditing(false)} variant="secondary"
+                              sx={{p: 2}}>
                   Cancel
                 </CustomButton>
               </Box>
@@ -157,14 +160,16 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
                 Likes {question.likesCount}
               </Typography>
             </Box>
-            <Box display='inline-flex' gap={2}>
-              <IconButton onClick={() => setIsEditing(!isEditing)} size="small">
-                <EditIcon fontSize="medium" sx={{color: '#000048'}}/>
-              </IconButton>
-              <IconButton onClick={() => handleDelete()} size="small">
-                <DeleteIcon fontSize="medium" sx={{color: '#000048'}}/>
-              </IconButton>
-            </Box>
+            {user?.role === Role.ADMIN ? (
+                <Box display='inline-flex' gap={2}>
+                  <IconButton onClick={() => setIsEditing(!isEditing)} size="small">
+                    <EditIcon fontSize="medium" sx={{color: '#000048'}}/>
+                  </IconButton>
+                  <IconButton onClick={() => handleDelete()} size="small">
+                    <DeleteIcon fontSize="medium" sx={{color: '#000048'}}/>
+                  </IconButton>
+                </Box>
+            ) : null}
           </Box>
         </Box>
 
@@ -176,31 +181,33 @@ export const QuestionDetailsModal: React.FC<QuestionDetailsModal> = (
           {renderComments(question.comments)}
         </Box>
 
-        <Box component="form" onSubmit={handleCommentSubmit} sx={{
-          p: 3,
-          borderTop: '1px solid #DDDDDD',
-          position: 'sticky',
-          bottom: 0,
-          backgroundColor: 'background.paper',
-          zIndex: 1
-        }}>
-          <TextField
-              fullWidth
-              placeholder="Write a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              size="small"
-              multiline
-              rows={2}
-          />
-          <CustomButton
-              type="submit"
-              variant='primary'
-              sx={{mt: 1, p: 2}}
-          >
-            Post Comment
-          </CustomButton>
-        </Box>
+        {user?.role === Role.ADMIN ? (
+            <Box component="form" onSubmit={handleCommentSubmit} sx={{
+              p: 3,
+              borderTop: '1px solid #DDDDDD',
+              position: 'sticky',
+              bottom: 0,
+              backgroundColor: 'background.paper',
+              zIndex: 1
+            }}>
+              <TextField
+                  fullWidth
+                  placeholder="Write a comment..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  size="small"
+                  multiline
+                  rows={2}
+              />
+              <CustomButton
+                  type="submit"
+                  variant='primary'
+                  sx={{mt: 1, p: 2}}
+              >
+                Post Comment
+              </CustomButton>
+            </Box>
+        ) : null}
       </Box>
   );
 };

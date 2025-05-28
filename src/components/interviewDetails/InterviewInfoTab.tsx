@@ -1,7 +1,6 @@
 'use client';
 
 import {InterviewDetails, InterviewUpdateDetails} from "@/interface/interviewDetails";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import React, {FC, useState} from "react";
 import {Status} from "@/interface/Status";
 import {
@@ -19,6 +18,10 @@ import {
 import {CustomButton} from "@/components";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {useUser} from "@/context";
+import {Role} from "@/interface/UserDetails";
 
 interface InterviewInfoTabProps {
   interviewDetails: InterviewDetails,
@@ -34,6 +37,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
     }
 ) => {
   const [status, setStatus] = useState<Status>(interviewDetails.status);
+  const {user} = useUser()
   const [copied, setCopied] = useState(false);
   const [candidateDto, setCandidateDto] = useState<{
     fullName: string,
@@ -155,14 +159,23 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
   return (
       <Box>
         <Box display="flex" alignItems="center" justifyContent="flex-end" gap="8px">
-          <CustomButton variant="secondary" onClick={handleCancel}>
-            <CloseIcon sx={{color: "#000048"}}/>
-            <Typography padding="8px">Cancel</Typography>
-          </CustomButton>
-          <CustomButton variant="primary" onClick={handleSave}>
-            <AddIcon sx={{color: "white"}}/>
-            <Typography padding="8px">Save</Typography>
-          </CustomButton>
+          {user?.role === Role.ADMIN ? (
+              <>
+                <CustomButton variant="secondary" onClick={handleCancel}>
+                  <CloseIcon sx={{color: "#000048"}}/>
+                  <Typography padding="8px">Cancel</Typography>
+                </CustomButton>
+                <CustomButton variant="primary" onClick={handleSave}>
+                  <AddIcon sx={{color: "white"}}/>
+                  <Typography padding="8px">Save</Typography>
+                </CustomButton>
+              </>
+          ) : (
+              <CustomButton variant="secondary" onClick={handleCancel}>
+                <ArrowBackIcon sx={{color: "#000048"}}/>
+                <Typography padding="8px">Back</Typography>
+              </CustomButton>
+          )}
         </Box>
         <Divider sx={{my: 3}}/>
         <Typography
@@ -183,6 +196,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
               value={candidateDto.fullName}
               onChange={handleInputChange('fullName')}
               margin="normal"
+              disabled={user?.role !== Role.ADMIN}
               fullWidth
               error={!!errors.fullName}
               helperText={errors.fullName}
@@ -208,6 +222,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                   </Box>
                 }
                 value={candidateDto.email}
+                disabled={user?.role !== Role.ADMIN}
                 onChange={handleInputChange('email')}
                 margin="normal"
                 fullWidth
@@ -220,6 +235,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                 label="Phone number"
                 value={candidateDto.phoneNumber}
                 onChange={handleInputChange('phoneNumber')}
+                disabled={user?.role !== Role.ADMIN}
                 margin="normal"
                 fullWidth
                 error={!!errors.phoneNumber}
@@ -227,46 +243,48 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                 sx={{mt: 3, height: '30px'}}
             />
           </Box>
-          <TextField
-              label={
-                <Box display="flex" gap="5px" sx={{color: '#666666'}}>
-                  Password
-                  <span style={{color: '#FA3131'}}>*</span>
-                </Box>
-              }
-              type="password"
-              value={candidateDto.rawPassword}
-              margin="normal"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-                endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title={copied ? 'Copied' : 'Copy password'} arrow>
-                        <IconButton
-                            onClick={handleCopy}
-                            edge="end"
-                            aria-label="copy password"
-                        >
-                          <ContentCopyIcon/>
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                ),
-              }}
-              sx={{
-                minWidth: '780px',
-                height: '30px',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#DDDDDD',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#DDDDDD',
-                  },
-                },
-              }}
-          />
+          {user?.role === Role.ADMIN ? (
+              <TextField
+                  label={
+                    <Box display="flex" gap="5px" sx={{color: '#666666'}}>
+                      Password
+                      <span style={{color: '#FA3131'}}>*</span>
+                    </Box>
+                  }
+                  type="password"
+                  value={candidateDto.rawPassword}
+                  margin="normal"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title={copied ? 'Copied' : 'Copy password'} arrow>
+                            <IconButton
+                                onClick={handleCopy}
+                                edge="end"
+                                aria-label="copy password"
+                            >
+                              <ContentCopyIcon/>
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    minWidth: '780px',
+                    height: '30px',
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: '#DDDDDD',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#DDDDDD',
+                      },
+                    },
+                  }}
+              />
+          ) : null}
 
           <Divider sx={{my: 5}}/>
         </Box>
@@ -289,6 +307,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                     </Box>
                   }
                   value={interviewDto.openPosition}
+                  disabled={user?.role !== Role.ADMIN}
                   onChange={handleInputInterviewChange('openPosition')}
                   margin="normal"
                   fullWidth
@@ -313,6 +332,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                     </Box>
                   }
                   value={interviewDto.department}
+                  disabled={user?.role !== Role.ADMIN}
                   onChange={handleInputInterviewChange('department')}
                   margin="normal"
                   fullWidth
@@ -341,6 +361,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
               <Select
                   value={status as any}
                   onChange={handleStatusChange}
+                  disabled={user?.role !== Role.ADMIN}
                   sx={{
                     padding: '4px 8px',
                     width: '380px',
@@ -392,6 +413,7 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
                     </Box>
                   }
                   value={interviewDto.notes}
+                  disabled={user?.role !== Role.ADMIN}
                   onChange={handleInputInterviewChange('notes')}
                   margin="normal"
                   fullWidth
@@ -416,14 +438,23 @@ export const InterviewInfoTab: FC<InterviewInfoTabProps> = (
         </Box>
         <Divider sx={{my: 5}}/>
         <Box display="flex" alignItems="center" justifyContent="flex-end" gap="8px">
-          <CustomButton variant="secondary" onClick={handleCancel}>
-            <CloseIcon sx={{color: "#000048"}}/>
-            <Typography padding="8px">Cancel</Typography>
-          </CustomButton>
-          <CustomButton variant="primary" onClick={handleSave}>
-            <AddIcon sx={{color: "white"}}/>
-            <Typography padding="8px">Save</Typography>
-          </CustomButton>
+          {user?.role === Role.ADMIN ? (
+              <>
+                <CustomButton variant="secondary" onClick={handleCancel}>
+                  <CloseIcon sx={{color: "#000048"}}/>
+                  <Typography padding="8px">Cancel</Typography>
+                </CustomButton>
+                <CustomButton variant="primary" onClick={handleSave}>
+                  <AddIcon sx={{color: "white"}}/>
+                  <Typography padding="8px">Save</Typography>
+                </CustomButton>
+              </>
+          ) : (
+              <CustomButton variant="secondary" onClick={handleCancel}>
+                <ArrowBackIcon sx={{color: "#000048"}}/>
+                <Typography padding="8px">Back</Typography>
+              </CustomButton>
+          )}
         </Box>
       </Box>
   );

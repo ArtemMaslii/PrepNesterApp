@@ -12,7 +12,8 @@ export const TopBar = () => {
       <Grid container justifyContent="flex-end" alignItems="center"
             sx={{padding: '10px 20px', borderBottom: '1px solid #ccc'}}>
         <Grid>
-          <IconButton onClick={() => router.push("/prepnester/me")}>
+          <IconButton onClick={() => {
+          }}>
             <Avatar sx={{width: 40, height: 40}}>{user?.fullName.charAt(0)}</Avatar>
           </IconButton>
         </Grid>

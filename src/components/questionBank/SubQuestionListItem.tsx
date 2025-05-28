@@ -3,6 +3,8 @@ import {QuestionContentPreview} from "@/components/questionBank";
 import {ChatBubbleOutlineOutlined} from "@mui/icons-material";
 import {FC, useState} from "react";
 import {LikeButton} from "@/components";
+import {Role} from "@/interface/UserDetails";
+import {useUser} from "@/context";
 
 type SubQuestionListItemProps = {
   id: string;
@@ -25,6 +27,7 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
        isLikedByCurrentUser,
        onQuestionClick,
      }) => {
+      const {user} = useUser()
       const [currentLikeAmount, setCurrentLikeAmount] = useState(likesCount);
 
       const handleLikeUpdate = (newCount: number) => {
@@ -50,13 +53,16 @@ export const SubQuestionListItem: FC<SubQuestionListItemProps> =
                   likesCount={currentLikeAmount}
               />
             </Box>
-            <Box display='flex' sx={{gap: '18px'}} alignItems="center">
-              <ChatBubbleOutlineOutlined sx={{color: '#999999', height: '20px', width: '20px'}}/>
-              <LikeButton entityType="questions/sub-questions" entityId={id}
-                          initialLikesCount={currentLikeAmount}
-                          initialIsLiked={isLikedByCurrentUser}
-                          onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
-            </Box>
+            {user?.role === Role.ADMIN ? (
+                <Box display='flex' sx={{gap: '18px'}} alignItems="center">
+                  <ChatBubbleOutlineOutlined
+                      sx={{color: '#999999', height: '20px', width: '20px'}}/>
+                  <LikeButton entityType="questions/sub-questions" entityId={id}
+                              initialLikesCount={currentLikeAmount}
+                              initialIsLiked={isLikedByCurrentUser}
+                              onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>
+                </Box>
+            ) : null}
           </Box>
       )
     }

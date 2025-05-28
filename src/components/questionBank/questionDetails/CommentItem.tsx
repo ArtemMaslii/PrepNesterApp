@@ -5,6 +5,7 @@ import {Comment, RequestUpdateComment} from "@/interface/questionDetails";
 import {Avatar, Box, Button, TextField, Typography} from "@mui/material";
 import {CommentLikeButton, CustomButton} from "@/components";
 import {useUser} from "@/context";
+import {Role} from "@/interface/UserDetails";
 
 export const CommentItem: React.FC<{
   comment: Comment;
@@ -115,35 +116,13 @@ export const CommentItem: React.FC<{
             }
           </Box>
 
-          <Box display='flex' gap={2} alignItems='center' sx={{mt: 1}}>
-            {!comment.parentId && !isEditing && (
-                <>
-                  <Button
-                      size="small"
-                      onClick={() => setShowReplyForm(!showReplyForm)}
-                      sx={{
-                        minWidth: 0,
-                        padding: 0,
-                        color: '#666666',
-                        textTransform: "none",
-                        textDecoration: 'underline',
-                        '&:hover': {
-                          textDecoration: 'underline',
-                          backgroundColor: 'transparent'
-                        }
-                      }}
-                  >
-                    Reply
-                  </Button>
-                  <span>•</span>
-                </>
-            )}
-            {comment.createdBy === user?.id ? (
-                !isEditing && (
+          {user?.role === Role.ADMIN ? (
+              <Box display='flex' gap={2} alignItems='center' sx={{mt: 1}}>
+                {!comment.parentId && !isEditing && (
                     <>
                       <Button
                           size="small"
-                          onClick={() => setIsEditing(true)}
+                          onClick={() => setShowReplyForm(!showReplyForm)}
                           sx={{
                             minWidth: 0,
                             padding: 0,
@@ -156,30 +135,54 @@ export const CommentItem: React.FC<{
                             }
                           }}
                       >
-                        Edit
+                        Reply
                       </Button>
                       <span>•</span>
                     </>
-                )) : null
-            }
+                )}
+                {comment.createdBy === user?.id ? (
+                    !isEditing && (
+                        <>
+                          <Button
+                              size="small"
+                              onClick={() => setIsEditing(true)}
+                              sx={{
+                                minWidth: 0,
+                                padding: 0,
+                                color: '#666666',
+                                textTransform: "none",
+                                textDecoration: 'underline',
+                                '&:hover': {
+                                  textDecoration: 'underline',
+                                  backgroundColor: 'transparent'
+                                }
+                              }}
+                          >
+                            Edit
+                          </Button>
+                          <span>•</span>
+                        </>
+                    )) : null
+                }
 
-            <CommentLikeButton
-                entityType='questions/comments'
-                entityId={comment.id}
-                initialLikesCount={currentLikeAmount}
-                initialIsLiked={comment.isLikedByCurrentUser}
-                onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}
-            />
+                <CommentLikeButton
+                    entityType='questions/comments'
+                    entityId={comment.id}
+                    initialLikesCount={currentLikeAmount}
+                    initialIsLiked={comment.isLikedByCurrentUser}
+                    onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}
+                />
 
-            {comment.updatedByName && (
-                <>
-                  <span>•</span>
-                  <Typography variant="body2" sx={{color: '#666666'}}>
-                    Edited {new Date(comment.updatedAt).toLocaleDateString()}
-                  </Typography>
-                </>
-            )}
-          </Box>
+                {comment.updatedByName && (
+                    <>
+                      <span>•</span>
+                      <Typography variant="body2" sx={{color: '#666666'}}>
+                        Edited {new Date(comment.updatedAt).toLocaleDateString()}
+                      </Typography>
+                    </>
+                )}
+              </Box>
+          ) : null}
 
           {/* Rest of your component remains the same */}
           {showReplyForm && (

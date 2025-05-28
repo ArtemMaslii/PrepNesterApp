@@ -1,7 +1,7 @@
 'use client';
 
 import React, {use, useEffect, useState} from "react";
-import {useInterviews} from "@/context";
+import {useInterviews, useUser} from "@/context";
 import {Box, Tab, Tabs, Typography} from "@mui/material";
 import {
   CheatSheetInterviewTab,
@@ -11,6 +11,7 @@ import {
 import {useRouter} from "next/navigation";
 import {CustomButton} from "@/components";
 import {InterviewUpdateDetails} from "@/interface/interviewDetails";
+import {Role} from "@/interface/UserDetails";
 
 function TabPanel(props: { children?: React.ReactNode; index: number; value: number }) {
   const {children, value, index, ...other} = props;
@@ -36,6 +37,7 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
   } = useInterviews();
   const router = useRouter();
   const {id} = use(params);
+  const {user} = useUser()
   const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
@@ -98,7 +100,9 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
         <Box sx={{borderBottom: 1, borderColor: 'divider', mt: 3}}>
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="interview tabs">
             <Tab label="Interview Info" id="interview-tab-0" aria-controls="interview-tabpanel-0"/>
-            <Tab label="Cheat Sheet" id="interview-tab-1" aria-controls="interview-tabpanel-1"/>
+            {user?.role === Role.ADMIN ? (
+                <Tab label="Cheat Sheet" id="interview-tab-1" aria-controls="interview-tabpanel-1"/>
+            ) : null}
           </Tabs>
         </Box>
 
@@ -107,7 +111,6 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
                             onCancelInterviewClick={handleCancelInterview}
                             onSaveInterviewClick={handleSaveInterview}/>
         </TabPanel>
-
         <TabPanel value={tabValue} index={1}>
           <CheatSheetInterviewTab id={interviewDetails.cheatSheetId}/>
         </TabPanel>
