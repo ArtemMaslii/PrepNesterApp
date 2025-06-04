@@ -59,7 +59,7 @@ export const QuestionListItem =
                   <Box display='flex' sx={{gap: '18px'}} alignItems="center">
                     <ChatBubbleOutlineOutlined
                         sx={{color: '#999999', height: '20px', width: '20px'}}/>
-                    <LikeButton entityType="cheatSheets" entityId={question.id}
+                    <LikeButton entityType="questions" entityId={question.id}
                                 initialLikesCount={currentLikeAmount}
                                 initialIsLiked={question.isLikedByCurrentUser}
                                 onLikeUpdate={(newCount) => handleLikeUpdate(newCount)}/>

@@ -91,6 +91,8 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({chil
       if (token) {
         const data = await updateInterview(token, id, body);
         setInterviewDetails(data);
+
+        await loadInterviews()
       }
     } catch (error) {
       console.error("Failed to fetch interviews", error);

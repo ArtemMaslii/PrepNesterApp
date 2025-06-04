@@ -269,7 +269,7 @@ export const CreateInterviewModal = (
                     textTransform: 'none',
                   }}
               >
-                Add Question
+                Add Candidate
               </Button>
             </Box>
           </Box>
