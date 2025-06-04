@@ -10,7 +10,7 @@ export const SideBar = ({simplified}: { simplified: boolean }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleClick = (path) => {
+  const handleClick = (path: string) => {
     if (pathname !== path) {
       router.push(path);
     }

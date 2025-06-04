@@ -33,7 +33,7 @@ export const CheatSheetQuestionBankPanel: React.FC<QuestionBankPanelProps> =
             <Box flex={1} display="flex" flexDirection="column" borderRight="1px solid #ddd"
                  borderRadius={1} p={2}>
               <Search value={searchTerm} onChange={onSearchChange} onSearch={() => {
-              }}> </Search>
+              }}/>
               <Box flex={1} overflow="auto" mt={2}>
                 <Typography variant="h6" gutterBottom>
                   {selectedCategoryId
@@ -50,7 +50,6 @@ export const CheatSheetQuestionBankPanel: React.FC<QuestionBankPanelProps> =
                             key={question.id}
                             question={question}
                             onClick={() => onQuestionClick(question)}
-                            isDraggable={false}
                             onRemove={() => {
                             }}
                         />

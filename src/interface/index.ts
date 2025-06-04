@@ -1,2 +1,2 @@
-export {LoginDto} from './LoginDto'
-export {JwtAuthResponse} from './JwtAuthResponse'
+export type {LoginDto} from './LoginDto'
+export type {JwtAuthResponse} from './JwtAuthResponse'

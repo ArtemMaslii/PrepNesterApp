@@ -10,7 +10,7 @@ import {CheatSheetDetails} from "@/interface/cheatSheetDetails";
 
 interface CheatSheetsContext {
   cheatSheets: CheatSheet[];
-  cheatSheetDetails: CheatSheetDetails;
+  cheatSheetDetails: CheatSheetDetails | null;
   cheatSheetsLoading: boolean;
   reloadCheatSheets: (isPublic?: boolean, sortBy?: SortBy, searchTerm?: string, pageNum?: number, pageSize?: number) => Promise<void>;
   loadCheatSheetDetails: (id: string) => Promise<void>;
@@ -21,7 +21,7 @@ const CheatSheetsContext = createContext<CheatSheetsContext | undefined>(undefin
 
 export const CheatSheetsProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [cheatSheets, setCheatSheets] = useState<CheatSheet[]>([]);
-  const [cheatSheetDetails, setCheatSheetDetails] = useState<CheatSheetDetails>(null);
+  const [cheatSheetDetails, setCheatSheetDetails] = useState<CheatSheetDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
   const {user} = useUser();

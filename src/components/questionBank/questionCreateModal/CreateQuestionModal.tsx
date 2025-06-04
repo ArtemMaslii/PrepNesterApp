@@ -275,9 +275,9 @@ export const CreateQuestionModal = (
                 <Button
                     fullWidth
                     variant="outlined"
-                    display='flex'
                     onClick={handleAddSubQuestionClick}
                     sx={{
+                      display: 'flex',
                       mt: 2,
                       textTransform: 'none',
                       color: '#2424D6',

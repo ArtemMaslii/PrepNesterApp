@@ -31,7 +31,7 @@ export default function InterviewSheetPage({params}: { params: Promise<{ id: str
   const [questionDetailsOpen, setQuestionDetailsOpen] = useState(false);
   const {id} = use(params);
 
-  const handleQuestionClick = useCallback(async (id: string, isSubQuestion: boolean) => {
+  const handleQuestionClick = useCallback(async (id: string, isSubQuestion?: boolean) => {
     if (!questionDetailsOpen) {
       if (isSubQuestion) {
         await loadSubQuestionById(id);

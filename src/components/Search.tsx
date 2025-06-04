@@ -8,6 +8,7 @@ interface SearchProps {
   onChange: (value: string) => void;
   onSearch: () => void;
   onClear?: () => void;
+  children?: React.ReactNode;
 }
 
 export const Search = ({value, onChange, onSearch, onClear}: SearchProps) => {

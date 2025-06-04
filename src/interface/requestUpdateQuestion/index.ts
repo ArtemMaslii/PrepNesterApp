@@ -1,1 +1,1 @@
-export {RequestUpdateQuestion} from './RequestUpdateQuestion'
+export type {RequestUpdateQuestion} from './RequestUpdateQuestion'

@@ -2,11 +2,9 @@
 import React from 'react';
 import {Avatar, Divider, Grid, IconButton} from '@mui/material';
 import {useUser} from "@/context";
-import {useRouter} from "next/navigation";
 
 export const TopBar = () => {
   const {user} = useUser()
-  const router = useRouter();
 
   return (
       <Grid container justifyContent="flex-end" alignItems="center"
@@ -18,7 +16,7 @@ export const TopBar = () => {
           </IconButton>
         </Grid>
 
-        <Grid xs={11}>
+        <Grid>
           <Divider/>
         </Grid>
       </Grid>

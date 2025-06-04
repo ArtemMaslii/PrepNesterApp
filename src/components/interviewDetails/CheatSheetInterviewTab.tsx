@@ -32,7 +32,7 @@ export const CheatSheetInterviewTab = ({id}: { id: string }) => {
   }, []);
   const [questionDetailsOpen, setQuestionDetailsOpen] = useState(false);
 
-  const handleQuestionClick = useCallback(async (id: string, isSubQuestion: boolean) => {
+  const handleQuestionClick = useCallback(async (id: string, isSubQuestion?: boolean) => {
     if (!questionDetailsOpen) {
       if (isSubQuestion) {
         await loadSubQuestionById(id);

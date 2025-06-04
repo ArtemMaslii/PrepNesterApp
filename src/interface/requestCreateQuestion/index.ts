@@ -1,3 +1,3 @@
-export {RequestCategory} from './RequestCategory'
-export {RequestSubQuestion} from './RequestSubQuestion'
-export {RequestQuestion} from './RequestQuestion'
+export type {RequestCategory} from './RequestCategory'
+export type {RequestSubQuestion} from './RequestSubQuestion'
+export type {RequestQuestion} from './RequestQuestion'

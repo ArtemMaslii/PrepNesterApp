@@ -1,3 +1,3 @@
-export {RequestCheatSheet} from './RequestCheatSheet'
-export {RequestCheatSheetCategory} from './RequestCheatSheetCategory'
-export {RequestCheatSheetQuestion} from './RequestCheatSheetQuestion'
+export type {RequestCheatSheet} from './RequestCheatSheet'
+export type {RequestCheatSheetCategory} from './RequestCheatSheetCategory'
+export type {RequestCheatSheetQuestion} from './RequestCheatSheetQuestion'

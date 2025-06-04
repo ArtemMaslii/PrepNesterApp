@@ -1,9 +1,11 @@
-import {TextFieldProps, Typography} from "@mui/material";
-import React, {FC} from "react";
+import {Typography} from "@mui/material";
+import React, {FC, ReactNode} from "react";
+import {TypographyProps} from "@mui/system";
 
 type CustomTextFieldProps = {
   variant: 'primary' | 'secondary';
-} & TextFieldProps;
+  children?: ReactNode;
+} & Omit<TypographyProps, 'variant'>;
 
 export const CustomTextField: FC<CustomTextFieldProps> =
     ({

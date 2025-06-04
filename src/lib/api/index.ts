@@ -1,5 +1,5 @@
 export {loginUser} from './auth'
-export {get, post, put, deleteRequest} from './common'
+export {get, post, put, deleteRequest, postLogin} from './common'
 export {getUserDetails} from './user'
 export {
   fetchAllQuestions,

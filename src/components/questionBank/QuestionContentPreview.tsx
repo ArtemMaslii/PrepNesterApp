@@ -35,7 +35,7 @@ export const QuestionContentPreview: FC<QuestionContentPreviewProps> =
                 ) : null
               }
               {
-                likesCount > 0 ? (
+                likesCount && likesCount > 0 ? (
                     <>
                       <CustomTextField variant="secondary">•</CustomTextField>
                       <CustomTextField

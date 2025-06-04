@@ -56,7 +56,7 @@ export default function QuestionBank() {
   });
   const [prevFilters, setPrevFilters] = useState(filters);
 
-  const handleQuestionClick = useCallback(async (id: string, isSubQuestion: boolean) => {
+  const handleQuestionClick = useCallback(async (id: string, isSubQuestion?: boolean) => {
     if (!questionDetailsOpen) {
       if (isSubQuestion) {
         await loadSubQuestionById(id);

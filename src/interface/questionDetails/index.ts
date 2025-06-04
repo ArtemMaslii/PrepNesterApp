@@ -1,4 +1,4 @@
-export {QuestionDetails} from './QuestionDetails';
-export {Comment} from './Comment';
-export {RequestCreateComment} from './RequestCreateComment'
-export {RequestUpdateComment} from './RequestUpdateComment'
+export type {QuestionDetails} from './QuestionDetails';
+export type {Comment} from './Comment';
+export type {RequestCreateComment} from './RequestCreateComment'
+export type {RequestUpdateComment} from './RequestUpdateComment'
