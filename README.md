@@ -1,3 +1,24 @@
+To start the project run the following command:
+
+```bash
+npm install
+
+npm run build
+
+npm start
+```
+
+Also add the following file: .env.local
+with such env variables:
+
+```env
+NEXT_PUBLIC_API_URL_AUTH=http://localhost:8080/api/v1
+```
+
+Make sure backend service is running!!!
+
+**Below some figures from diploma thesis:**
+
 Figure A1. Extended version of Use Case Diagram
 ![image](https://github.com/user-attachments/assets/40335921-3f03-4c85-814e-bf5480e12fbf)
 Figure A2. Extended version of Authorization Sequence diagram - Simple Login
