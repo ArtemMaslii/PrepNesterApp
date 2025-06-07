@@ -1,10 +1,11 @@
 'use client';
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Grid, Typography} from '@mui/material';
+import {Box, Button, Divider, Grid, Typography} from '@mui/material';
 import {useRouter} from 'next/navigation';
 import {loginUser} from '@/lib/api';
 import {useAuth} from '@/context';
 import {FormErrorMessage, TextFieldWithError} from '@/components';
+import {OAuthLoginButton} from "@/components/OAuthLoginButton";
 
 export default function LoginModal() {
   const router = useRouter();
@@ -109,6 +110,16 @@ export default function LoginModal() {
             >
               Sign in
             </Button>
+          </Box>
+          <Divider sx={{width: '100%', mb: 2}}/>
+          <Box sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            maxWidth: '400px'
+          }}>
+            <OAuthLoginButton/>
           </Box>
         </Box>
       </Grid>
