@@ -5,6 +5,7 @@ import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 type AuthContextType = {
   token: string | null;
   login: (token: string) => void;
+  loginOAuth2: (token: string, email: string) => void;
   logout: () => void;
   loading: boolean;
 };
@@ -29,7 +30,7 @@ export function AuthProvider({children}: { children: ReactNode }) {
     if (savedToken) {
       if (checkTokenExpiry(savedToken)) {
         setToken(savedToken);
-        
+
         const payload = JSON.parse(atob(savedToken.split('.')[1]));
         const expiresIn = payload.exp * 1000 - Date.now();
         setTimeout(logout, expiresIn);
@@ -54,13 +55,28 @@ export function AuthProvider({children}: { children: ReactNode }) {
     setTimeout(logout, expiresIn);
   };
 
+  const loginOAuth2 = (newToken: string, email: string) => {
+    if (!checkTokenExpiry(newToken)) {
+      logout();
+      return;
+    }
+
+    setToken(newToken);
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('email', email);
+
+    const payload = JSON.parse(atob(newToken.split('.')[1]));
+    const expiresIn = payload.exp * 1000 - Date.now();
+    setTimeout(logout, expiresIn);
+  };
+
   const logout = () => {
     setToken(null);
     localStorage.removeItem('token');
   };
 
   return (
-      <AuthContext.Provider value={{token, login, logout, loading}}>
+      <AuthContext.Provider value={{token, login, logout, loading, loginOAuth2}}>
         {children}
       </AuthContext.Provider>
   );

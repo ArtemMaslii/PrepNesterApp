@@ -5,7 +5,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 import {useAuth} from '@/context/AuthContext';
 
 export default function OAuth2SuccessPage() {
-  const {login} = useAuth();
+  const {loginOAuth2} = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -13,13 +13,14 @@ export default function OAuth2SuccessPage() {
     if (!searchParams) return;
 
     const token = searchParams.get('token');
-    if (token) {
-      login(token);
+    const email = searchParams.get('email');
+    if (token && email) {
+      loginOAuth2(token, email);
       router.push('/prepnester/question');
     } else {
-      router.push('/login');
+      router.push('/prepnester/signIn');
     }
-  }, [searchParams, login, router]);
+  }, [searchParams]);
 
   return <p>Logging you in...</p>;
 };
