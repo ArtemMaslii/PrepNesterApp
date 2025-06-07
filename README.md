@@ -1,3 +1,5 @@
+This repository represents the frontend part of an application, please make sure you've setup backend part https://github.com/ArtemMaslii/PrepNester before going to this step
+
 To start the project run the following command:
 
 ```bash
@@ -14,8 +16,6 @@ with such env variables:
 ```env
 NEXT_PUBLIC_API_URL_AUTH=http://localhost:8080/api/v1
 ```
-
-Make sure backend service is running!!!
 
 **Below some figures from diploma thesis:**
 
