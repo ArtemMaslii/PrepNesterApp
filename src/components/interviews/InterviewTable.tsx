@@ -40,6 +40,10 @@ export const InterviewTable: FC<InterviewTableProps> = (
     }
   }
 
+  const filteredInterviews = interviews.filter(interview =>
+      user?.role === Role.ADMIN || user?.fullName === interview.candidateFullName
+  );
+
   const getStatusText = (status: Status): string => {
     switch (status) {
       case Status.IN_PROGRESS:
@@ -140,7 +144,7 @@ export const InterviewTable: FC<InterviewTableProps> = (
             </TableRow>
           </TableHead>
           <TableBody>
-            {interviews.map((interview) => (
+            {filteredInterviews.map((interview) => (
                 <TableRow key={interview.id}>
                   <TableCell
                       sx={{

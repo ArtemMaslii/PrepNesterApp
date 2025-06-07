@@ -39,10 +39,11 @@ export const CheatSheetListItem = ({cheatSheet, onLikeUpdate}: Props) => {
         '&:hover': {
           backgroundColor: '#FAFAFA',
         }
-      }} onClick={handleClick}
+      }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box display="flex" alignItems="center" gap="10px">
+        <Box display="flex" justifyContent="space-between" alignItems="center"
+        >
+          <Box display="flex" alignItems="center" gap="10px" onClick={handleClick}>
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
