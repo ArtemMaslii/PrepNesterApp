@@ -17,6 +17,12 @@ with such env variables:
 NEXT_PUBLIC_API_URL_AUTH=http://localhost:8080/api/v1
 ```
 
+That should be it for local setup.
+
+If you want to access early-demo version: http://13.60.17.163:3000/prepnester/question and use such credentials:
+bob@example.com
+password_hash2
+
 **Below some figures from diploma thesis:**
 
 Figure A1. Extended version of Use Case Diagram
